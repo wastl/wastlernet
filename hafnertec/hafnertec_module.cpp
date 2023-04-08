@@ -8,8 +8,7 @@
 
 absl::Status hafnertec::HafnertecModule::Query(std::function<absl::Status(const hafnertec::HafnertecData &)> handler) {
     try {
-        query(uri, user, password, handler);
-        return absl::OkStatus();
+        return query(uri, user, password, handler);
     } catch (std::exception const &e) {
         LOG(ERROR) << "Error querying Hafnertec controller: " << e.what();
         return absl::InternalError(e.what());

@@ -8,12 +8,13 @@
 #include <functional>
 #include <string>
 #include <absl/strings/string_view.h>
+#include <absl/status/status.h>
 
 #include "solvis/solvis.pb.h"
 
 
 namespace solvis {
-void query(const absl::string_view host, int port, const std::function<void(const SolvisData&)>& handler);
+absl::Status query(const absl::string_view host, int port, const std::function<void(const SolvisData&)>& handler);
 }
 
 #endif //WASTLERNET_SOLVIS_CLIENT_H

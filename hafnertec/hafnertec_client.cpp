@@ -51,7 +51,7 @@ namespace hafnertec {
         return std::atof(n.c_str());
     }
 
-    void query(absl::string_view uri, absl::string_view user, absl::string_view password,
+    absl::Status query(absl::string_view uri, absl::string_view user, absl::string_view password,
                const std::function<void(const HafnertecData &)> &handler) {
         // Create http_client to send the request.
         std::string user_(user);
@@ -88,12 +88,16 @@ namespace hafnertec {
                             LOG(INFO) << "Received data from Hafnertec controller (chamber temperature "  << parse_numeric(c.nodeAt(1).text()) << ")";
 
                             handler(data);
+
+                            return absl::OkStatus();
                         } else {
                             LOG(ERROR) << "Hafnertec controller query failed: " << response.reason_phrase();
+                            return absl::InternalError(absl::StrCat("Hafnertec controller query failed: ", response.reason_phrase()));
                         }
                     }).get();
         } catch (const std::exception &e) {
             LOG(ERROR) << "Error while retrieving Hafnertec data: " << e.what();
+            return absl::InternalError(absl::StrCat("Error while retrieving Hafnertec data: ", e.what()));
         }
     }
 
