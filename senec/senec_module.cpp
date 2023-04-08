@@ -7,8 +7,7 @@
 
 absl::Status senec::SenecModule::Query(std::function<absl::Status(const SenecData &)> handler) {
     try {
-        senec::query(uri, handler);
-        return absl::OkStatus();
+        return senec::query(uri, handler);
     } catch (std::exception const &e) {
         LOG(ERROR) << "Error querying SENEC controller: " << e.what();
         return absl::InternalError(e.what());

@@ -8,6 +8,7 @@
 #include <cpprest/http_client.h>
 #include <cpprest/json.h>
 #include <glog/logging.h>
+#include <absl/strings/str_cat.h>
 
 #include "senec_client.h"
 
@@ -83,7 +84,7 @@ T senec_parse(const json::value& v) {
     return 0;
 }
 
-void senec::query(const std::string& uri, const std::function<void(const SenecData&)>& handler) {
+absl::Status senec::query(const std::string& uri, const std::function<void(const SenecData&)>& handler) {
     // Create http_client to send the request.
     http_client client(U(uri));
 
@@ -152,11 +153,15 @@ void senec::query(const std::string& uri, const std::function<void(const SenecDa
                         }
 
                         handler(data);
+
+                        return absl::OkStatus();
                     } else {
                         LOG(ERROR) << "SENEC query failed: " << response.reason_phrase();
+                        return absl::InternalError(absl::StrCat("SENEC query failed: ", response.reason_phrase()));
                     }
                 }).get();
     } catch (const std::exception &e) {
         LOG(ERROR) << "Error while retrieving SENEC data: " << e.what();
+        return absl::InternalError(absl::StrCat("Error while retrieving SENEC data: ", e.what()));
     }
 }
