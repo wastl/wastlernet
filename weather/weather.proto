@@ -1,0 +1,25 @@
+syntax = "proto2";
+package weather;
+
+message WeatherData {
+  optional double uv = 1;
+  optional double barometer = 2;       // hPa
+  optional double dailyrain = 3;       // mm
+  optional double dewpoint = 4;        // °C
+  optional TemperatureData outdoor = 5;
+  optional TemperatureData indoor = 6;
+  optional WindData wind = 7;
+  optional double rain = 8;            // mm
+  optional double solarradiation = 9;  // W
+};
+
+message TemperatureData {
+  optional double temperature = 1;      // °C
+  optional double humidity = 2;         // %
+};
+
+message WindData {
+  optional int32 direction = 1;         // 0-360°
+  optional double gusts = 2;            // mm/s
+  optional double speed = 3;            // mm/s
+};

@@ -1,0 +1,32 @@
+# proto-file: config.proto
+# proto-message: Config
+
+hafnertec {
+  host: "http://192.168.178.39/"
+  user: "user"
+  password: "1997"
+  poll_interval: 1
+}
+
+senec {
+  host: "http://192.168.178.37/"
+  poll_interval: 1
+}
+
+solvis {
+  host: "192.168.178.40"
+  port: 502
+  poll_interval: 1
+}
+
+weather {
+  listen: "http://192.168.178.2: 41001/"
+}
+
+timescaledb {
+  host: "localhost"
+  port: 5432
+  user: "wastlernet"
+  password: "wastlernet"
+  database: "wastlernet"
+}

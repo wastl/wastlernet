@@ -1,0 +1,22 @@
+syntax = "proto2";
+package hafnertec;
+
+message HafnertecData {
+  // Temperatur in Brennkammer
+  optional double temp_brennkammer = 1;
+
+  // Temperatur des Rücklaufs (von Ofen in Speicher)
+  optional double temp_ruecklauf = 2;
+
+  // Temperatur des Vorlaufs (von Speicher in Ofen)
+  optional double temp_vorlauf = 3;
+
+  // Prozent Ventilöffnung Durchlauf
+  optional int32 durchlauf = 4;
+
+  // Prozent Leistung Ventilator
+  optional int32 ventilator = 5;
+
+  // Prozent der Energie die an den Pufferspeicher geht.
+  optional int32 anteil_heizung = 6;
+}

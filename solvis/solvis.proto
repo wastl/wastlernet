@@ -1,0 +1,32 @@
+syntax = "proto2";
+package solvis;
+
+message SolvisData {
+  // Temperatursensoren Speicher
+  optional float speicher_oben = 1;         // S1
+  optional float heizungspuffer_oben = 2;   // S4
+  optional float heizungspuffer_unten = 3;  // S9
+  optional float speicher_unten = 4;        // S4
+
+  // Temperatursensoren Wasser
+  optional float warmwasser = 5;            // S2
+  optional float kaltwasser = 6;            // S15
+  optional float zirkulation = 7;           // S11
+  optional int32 durchfluss = 8;            // S18 (l/min)
+
+  // Solaranlage
+  optional float solar_kollektor = 9;       // S8
+  optional float solar_vorlauf = 10;        // S5
+  optional float solar_ruecklauf = 11;      // S6
+  optional float solar_waermetauscher = 12; // S7
+  optional int32 solar_volumenstrom = 13;   // S17 (l/min)
+  optional float solar_leistung = 14;       // kW (temperatur delta * volumenstrom / 860)
+
+  // Heizkreise
+  optional float vorlauf_heizkreis1 = 15;   // S12
+  optional float vorlauf_heizkreis2 = 16;   // S13
+  optional float vorlauf_heizkreis3 = 17;   // S16
+
+  // Kessel
+  optional float kessel = 18;                // S14
+}
