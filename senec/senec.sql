@@ -40,17 +40,17 @@ CREATE INDEX senec_id_idx ON senec(id);
 CREATE TABLE senec_mppt (
                             senec_id INT NOT NULL,
                             mppt_id INT NOT NULL,
-                            strom NUMERIC(4,1) NULL,
-                            spannung NUMERIC(4,1) NULL,
-                            leistung NUMERIC(4,1) NULL
+                            strom NUMERIC(6,1) NULL,
+                            spannung NUMERIC(6,1) NULL,
+                            leistung NUMERIC(6,1) NULL
 );
 CREATE UNIQUE INDEX senec_mppt_idx ON senec_mppt(senec_id, mppt_id);
 
 CREATE TABLE senec_ac (
                           senec_id INT NOT NULL,
                           ac_id INT NOT NULL,
-                          strom NUMERIC(4,1) NULL,
-                          spannung NUMERIC(4,1) NULL,
+                          strom NUMERIC(6,1) NULL,
+                          spannung NUMERIC(6,1) NULL,
                           leistung NUMERIC(6,1) NULL
 );
 CREATE UNIQUE INDEX senec_ac_idx ON senec_ac(senec_id, ac_id);

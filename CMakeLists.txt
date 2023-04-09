@@ -24,7 +24,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 ADD_EXECUTABLE(wastlernet main.cpp include/module.h)
 TARGET_LINK_LIBRARIES(wastlernet
         config
-        hafnertec_client solvis_client senec_client
+        hafnertec_client solvis_client senec_client weather_client
         cpprest pthread glog gumbo gumbo_query
         absl_strings absl_status absl_statusor absl_str_format_internal absl_throw_delegate
         crypto pqxx

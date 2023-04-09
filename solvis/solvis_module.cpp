@@ -9,8 +9,7 @@
 
 absl::Status solvis::SolvisModule::Query(std::function<absl::Status(const solvis::SolvisData &)> handler) {
     try {
-        query(host, port, handler);
-        return absl::OkStatus();
+        return query(host, port, handler);
     } catch (std::exception const &e) {
         LOG(ERROR) << "Error querying Solvis controller: " << e.what();
         return absl::InternalError(e.what());

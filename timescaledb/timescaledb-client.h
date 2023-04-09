@@ -30,26 +30,25 @@ namespace timescaledb {
     private:
         std::string host_, db_, user_, password_;
         int port_;
+        int reconnect_times_;
 
         std::unique_ptr<pqxx::connection> conn_;
         std::unique_ptr<TimescaleWriter<Data>> writer_;
+
+        // Attempt to re-establish connection before starting a transaction.
+        absl::Status Reconnect();
+
     public:
         // Takes ownership of writer
-        TimescaleConnection(TimescaleWriter<Data>* writer, absl::string_view db, absl::string_view host, int port, absl::string_view user, absl::string_view password)
+        TimescaleConnection(
+                TimescaleWriter<Data>* writer,
+                absl::string_view db, absl::string_view host, int port,
+                absl::string_view user, absl::string_view password)
                 : writer_(writer), db_(db), host_(host), port_(port), user_(user), password_(password) { }
 
         absl::Status Init();
 
-        absl::Status Update(const Data& data) {
-            pqxx::work tx(*conn_);
-            auto st = writer_->write(tx, data);
-            if (st.ok()) {
-                tx.commit();
-            } else {
-                tx.abort();
-            }
-            return st;
-        }
+        absl::Status Update(const Data& data);
 
         absl::Status Close();
     };
@@ -77,5 +76,31 @@ absl::Status timescaledb::TimescaleConnection<Data>::Init() {
         LOG(ERROR) << "Database error initialising connection: " << e.what();
         return absl::InternalError(e.what());
     }
+}
+
+template<class Data>
+absl::Status timescaledb::TimescaleConnection<Data>::Reconnect() {
+    if (!conn_->is_open()) {
+        delete conn_.get();
+        return Init();
+    }
+    return absl::OkStatus();
+}
+
+template<class Data>
+absl::Status timescaledb::TimescaleConnection<Data>::Update(const Data &data) {
+    auto rst = Reconnect();
+    if(!rst.ok()) {
+        return rst;
+    }
+
+    pqxx::work tx(*conn_);
+    auto st = writer_->write(tx, data);
+    if (st.ok()) {
+        tx.commit();
+    } else {
+        tx.abort();
+    }
+    return st;
 }
 #endif //WASTLERNET_TIMESCALEDB_CLIENT_H

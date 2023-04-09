@@ -14,6 +14,7 @@
 #include "hafnertec/hafnertec_module.h"
 #include "senec/senec_module.h"
 #include "solvis/solvis_module.h"
+#include "weather/weather_module.h"
 
 using namespace std::chrono;
 using google::protobuf::io::ZeroCopyInputStream;
@@ -31,50 +32,64 @@ int main(int argc, char *argv[]) {
 
     int fd = open(argv[1], O_RDONLY);
     if (fd == -1) {
-        std::cerr << "Could not open configuration file";
+        LOG(ERROR) << "Could not open configuration file";
         return 1;
     }
     ZeroCopyInputStream* cfg_file = new FileInputStream(fd);
     if (!google::protobuf::TextFormat::Parse(cfg_file, &config)) {
-        std::cerr << "Unable to parse configuration file" << std::endl;
+        LOG(ERROR) << "Unable to parse configuration file" << std::endl;
         return 1;
     }
     delete cfg_file;
     close(fd);
 
-    std::cout << "Loaded configuration." << std::endl;
+    LOG(INFO) << "Loaded configuration." << std::endl;
 
     solvis::SolvisModule solvis_client(config.timescaledb(),config.solvis());
     auto solvis_st = solvis_client.Init();
     if (!solvis_st.ok()) {
-        std::cerr << "Could not initialize Solvis module: " << solvis_st;
+        LOG(ERROR) << "Could not initialize Solvis module: " << solvis_st;
         return 1;
     }
     solvis_client.Start();
 
-    std::cout << "Started Solvis module." << std::endl;
+    LOG(INFO) << "Started Solvis module." << std::endl;
 
     hafnertec::HafnertecModule hafnertec_client(config.timescaledb(), config.hafnertec());
     auto hafnertec_st = hafnertec_client.Init();
     if(!hafnertec_st.ok()) {
-        std::cerr << "Could not initialize Hafnertec module: " << hafnertec_st;
+        LOG(ERROR) << "Could not initialize Hafnertec module: " << hafnertec_st;
         return 1;
     }
     hafnertec_client.Start();
 
-    std::cout << "Started Hafnertec module." << std::endl;
+    LOG(INFO) << "Started Hafnertec module." << std::endl;
 
     senec::SenecModule senec_client(config.timescaledb(), config.senec());
     auto senec_st = senec_client.Init();
     if(!senec_st.ok()) {
-        std::cerr << "Could not initialize Senec module: " << senec_st;
+        LOG(ERROR) << "Could not initialize Senec module: " << senec_st;
         return 1;
     }
     senec_client.Start();
 
-    std::cout << "Started Senec module." << std::endl;
+    LOG(INFO) << "Started Senec module." << std::endl;
+
+    weather::WeatherModule weather_client(config.timescaledb(), config.weather());
+    auto weather_st = weather_client.Init();
+    if(!weather_st.ok()) {
+        LOG(ERROR) << "Could not initialize Weather module: " << weather_st;
+        return 1;
+    }
+    weather_client.Start();
+
+    LOG(INFO) << "Started Weather module." << std::endl;
+
+
+    LOG(INFO) << "Smart Home Controller startup sequence completed.";
 
     solvis_client.Wait();
     hafnertec_client.Wait();
     senec_client.Wait();
+    weather_client.Wait();
 }
