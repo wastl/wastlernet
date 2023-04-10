@@ -54,8 +54,11 @@ namespace weather {
                 data.mutable_wind()->set_speed(mph2ms(std::stod(q["windspeedmph"])));
 
                 handler(data);
+
+                request.reply(web::http::status_codes::OK).get();
             } catch(const std::exception &e) {
                 LOG(ERROR) << "Error while logging data: " << e.what();
+                request.reply(web::http::status_codes::InternalError);
             }
         });
 

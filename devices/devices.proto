@@ -1,0 +1,47 @@
+syntax = "proto2";
+package wastlernet;
+
+// Generic representation of smart home device state for devices of different manufacturers
+// (Phillips, TP-Link, AVM)
+
+message Device {
+  optional string id = 1;
+  optional string name = 2;
+  optional int32 kind = 3; // 0=undefined, 1=light, 2=sensor, 3=plug, 4=switch, 5=thermostat
+  optional bool state = 4; // false=off, true=on
+  optional Sensor sensor = 5;
+  optional Light light = 6;
+  optional Plug plug = 7;
+}
+
+message Sensor {
+  optional double temperature = 1;
+  optional double humidity = 2;
+  optional bool presence = 3;
+  optional int32 light_level = 4;
+  optional bool is_daylight = 5;
+  optional bool is_night = 6;
+}
+
+message Light {
+  optional int32 brightness = 1;
+  optional int32 red = 2;
+  optional int32 green = 3;
+  optional int32 blue = 4;
+}
+
+message Plug {
+  optional double current = 1;
+  optional double voltage = 2;
+  optional double power = 3;
+}
+
+message Thermostat {
+  // TODO
+}
+
+message Room {
+  optional string type = 1;
+  optional string name = 2;
+  optional bool is_light_on = 3;
+}

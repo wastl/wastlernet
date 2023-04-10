@@ -81,7 +81,7 @@ namespace hafnertec {
                             data.set_temp_brennkammer(parse_numeric(c.nodeAt(1).text()));
                             data.set_anteil_heizung(parse_numeric(c.nodeAt(2).text()));
                             data.set_temp_vorlauf(parse_numeric(c.nodeAt(3).text()));
-                            data.set_temp_vorlauf(parse_numeric(c.nodeAt(4).text()));
+                            data.set_temp_ruecklauf(parse_numeric(c.nodeAt(4).text()));
                             data.set_durchlauf(parse_numeric(c.nodeAt(5).text()));
                             data.set_ventilator(parse_numeric(c.nodeAt(9).text()));
 

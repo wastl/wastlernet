@@ -80,8 +80,19 @@ absl::Status timescaledb::TimescaleConnection<Data>::Init() {
 
 template<class Data>
 absl::Status timescaledb::TimescaleConnection<Data>::Reconnect() {
-    if (!conn_->is_open()) {
-        delete conn_.get();
+    bool alive = false;
+    try {
+        alive = conn_->is_open();
+    } catch (pqxx::broken_connection const &e) {
+        alive = false;
+    }
+
+    if (!alive) {
+        LOG(WARNING) << "Reconnecting to PostgreSQL database.";
+        try {
+            conn_->close();
+        } catch (std::exception const &e) {}
+        delete conn_.release();
         return Init();
     }
     return absl::OkStatus();

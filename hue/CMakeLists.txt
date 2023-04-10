@@ -1,0 +1,12 @@
+INCLUDE(FindProtobuf)
+FIND_PACKAGE(Protobuf REQUIRED)
+INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/..)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/..)
+PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HEADER hafnertec.proto)
+
+ADD_LIBRARY(hue_client hue_client.cpp hue_client.h ${PROTO_HEADER} ${PROTO_SRC})
+
+ADD_EXECUTABLE(solvis_debug solvis_debug.cpp)
+TARGET_LINK_LIBRARIES(solvis_debug PUBLIC solvis_client ${MODBUS_LIBRARY} ${GLOG_LIBRARY} ${Protobuf_LIBRARIES} glog absl_strings absl_status absl_throw_delegate)
+
