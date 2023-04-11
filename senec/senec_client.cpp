@@ -19,6 +19,8 @@ using namespace web::http::client;          // HTTP client features
 using namespace concurrency::streams;       // Asynchronous streams
 using namespace web::json;                  // JSON library
 
+#define LOGS(level) LOG(level) << "[senec] "
+
 json::value build_senec_request() {
     json::value request;
     request["PV1"]["POWER_RATIO"]=json::value::string("");
@@ -62,7 +64,7 @@ float hex2float(const std::string& s) {
 template<typename T>
 T senec_parse(const json::value& v) {
     if (!v.is_string()) {
-        LOG(ERROR) << "Warning: value is not a string: " << v.serialize();
+        LOGS(ERROR) << "Warning: value is not a string: " << v.serialize();
         return 0;
     }
 
@@ -78,7 +80,7 @@ T senec_parse(const json::value& v) {
         return hex2float(s.substr(3));
     }
     if (s.rfind("st", 0) == 0) {
-        LOG(ERROR) << "Warning: value is not a number: " << v.serialize();
+        LOGS(ERROR) << "Warning: value is not a number: " << v.serialize();
         return 0;
     }
     return 0;
@@ -89,6 +91,7 @@ absl::Status senec::query(const std::string& uri, const std::function<void(const
     http_client client(U(uri));
 
     // request data
+    LOGS(INFO) << "Querying Senec contoller";
 
     // Build request URI and start the request.
     uri_builder builder(U("/lala.cgi"));
@@ -97,6 +100,8 @@ absl::Status senec::query(const std::string& uri, const std::function<void(const
                 [=](http_response response) {
                     if (response.status_code() == status_codes::OK) {
                         json::value result = response.extract_json(true).get();
+
+                        LOGS(INFO) << "Received data from Senec controller";
 
                         senec::SenecData data;
                         data.mutable_system()->set_pv_begrenzung(senec_parse<int>(result["PV1"]["POWER_RATIO"]));
@@ -152,16 +157,18 @@ absl::Status senec::query(const std::string& uri, const std::function<void(const
                             data.mutable_quellen()->set_bezug(data.leistung().netz_leistung());
                         }
 
+                        LOGS(INFO) << "running handler";
+
                         handler(data);
 
                         return absl::OkStatus();
                     } else {
-                        LOG(ERROR) << "SENEC query failed: " << response.reason_phrase();
+                        LOGS(ERROR) << "SENEC query failed: " << response.reason_phrase();
                         return absl::InternalError(absl::StrCat("SENEC query failed: ", response.reason_phrase()));
                     }
                 }).get();
     } catch (const std::exception &e) {
-        LOG(ERROR) << "Error while retrieving SENEC data: " << e.what();
+        LOGS(ERROR) << "Error while retrieving SENEC data: " << e.what();
         return absl::InternalError(absl::StrCat("Error while retrieving SENEC data: ", e.what()));
     }
 }

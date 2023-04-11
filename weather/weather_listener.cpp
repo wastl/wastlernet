@@ -27,15 +27,19 @@ namespace {
 using web::http::http_request;
 using web::http::experimental::listener::http_listener;
 
+#define LOGW(level) LOG(level) << "[weather] "
+
 namespace weather {
     std::unique_ptr<http_listener> start_listener(const std::string& uri, const std::function<void(const WeatherData&)>& handler) {
         auto listener = std::make_unique<http_listener>(uri);
+
+        LOGW(INFO) << "starting HTTP listener on address " << uri;
 
         listener->support([=](http_request request){
             auto uri = request.relative_uri();
             auto q = web::uri::split_query(uri.query());
 
-            LOG(INFO) << "Wetterdaten erhalten";
+            LOGW(INFO) << "Received weather data";
 
             try {
                 WeatherData data;
@@ -53,11 +57,15 @@ namespace weather {
                 data.mutable_wind()->set_gusts(mph2ms(std::stod(q["windgustmph"])));
                 data.mutable_wind()->set_speed(mph2ms(std::stod(q["windspeedmph"])));
 
+                LOGW(INFO) << "running handler";
+
                 handler(data);
+
+                LOGW(INFO) << "returning HTTP response";
 
                 request.reply(web::http::status_codes::OK).get();
             } catch(const std::exception &e) {
-                LOG(ERROR) << "Error while logging data: " << e.what();
+                LOGW(ERROR) << "Error while updating data: " << e.what();
                 request.reply(web::http::status_codes::InternalError);
             }
         });

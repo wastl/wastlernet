@@ -58,6 +58,7 @@ namespace timescaledb {
 template<class Data>
 absl::Status timescaledb::TimescaleConnection<Data>::Close() {
     try {
+        LOG(INFO) << "Closing PostgreSQL connection";
         conn_->close();
         return absl::OkStatus();
     } catch (std::exception const &e) {
@@ -69,6 +70,7 @@ absl::Status timescaledb::TimescaleConnection<Data>::Close() {
 template<class Data>
 absl::Status timescaledb::TimescaleConnection<Data>::Init() {
     try {
+        LOG(INFO) << "Initialising PostgreSQL connection";
         std::string conn_str = absl::StrFormat("postgresql://%s:%s@%s:%d/%s", user_, password_, host_, port_, db_);
         conn_ = std::make_unique<pqxx::connection>(conn_str);
         return writer_->prepare(*conn_);
@@ -100,6 +102,8 @@ absl::Status timescaledb::TimescaleConnection<Data>::Reconnect() {
 
 template<class Data>
 absl::Status timescaledb::TimescaleConnection<Data>::Update(const Data &data) {
+    LOG(INFO) << "Updating database";
+
     auto rst = Reconnect();
     if(!rst.ok()) {
         return rst;
@@ -112,6 +116,9 @@ absl::Status timescaledb::TimescaleConnection<Data>::Update(const Data &data) {
     } else {
         tx.abort();
     }
+
+    LOG(INFO) << "Update completed (status: " << st << ")";
+
     return st;
 }
 #endif //WASTLERNET_TIMESCALEDB_CLIENT_H

@@ -21,9 +21,9 @@ using namespace web::http;                  // Common HTTP functionality
 using namespace web::http::client;          // HTTP client features
 using namespace concurrency::streams;       // Asynchronous streams
 
+#define LOGH(level) LOG(level) << "[hafnertec] "
+
 namespace hafnertec {
-
-
     double parse_numeric(absl::string_view s) {
         int start, end;
 
@@ -42,7 +42,7 @@ namespace hafnertec {
         }
 
         if (start == end) {
-            LOG(ERROR) << "Could not find number in '" << s << "'";
+            LOGH(ERROR) << "Could not find number in '" << s << "'";
             return 0;
         }
 
@@ -63,6 +63,7 @@ namespace hafnertec {
         http_client client(U(std::string(uri)), config);
 
         // request data
+        LOGH(INFO) << "Querying Hafnertec controller";
 
         // Build request URI and start the request.
         uri_builder builder(U("/schematic_files/9.cgi"));
@@ -85,18 +86,19 @@ namespace hafnertec {
                             data.set_durchlauf(parse_numeric(c.nodeAt(5).text()));
                             data.set_ventilator(parse_numeric(c.nodeAt(9).text()));
 
-                            LOG(INFO) << "Received data from Hafnertec controller (chamber temperature "  << parse_numeric(c.nodeAt(1).text()) << ")";
+                            LOGH(INFO) << "Received data from Hafnertec controller (chamber temperature "  << parse_numeric(c.nodeAt(1).text()) << ")";
+                            LOGH(INFO) << "running handler";
 
                             handler(data);
 
                             return absl::OkStatus();
                         } else {
-                            LOG(ERROR) << "Hafnertec controller query failed: " << response.reason_phrase();
+                            LOGH(ERROR) << "Hafnertec controller query failed: " << response.reason_phrase();
                             return absl::InternalError(absl::StrCat("Hafnertec controller query failed: ", response.reason_phrase()));
                         }
                     }).get();
         } catch (const std::exception &e) {
-            LOG(ERROR) << "Error while retrieving Hafnertec data: " << e.what();
+            LOGH(ERROR) << "Error while retrieving Hafnertec data: " << e.what();
             return absl::InternalError(absl::StrCat("Error while retrieving Hafnertec data: ", e.what()));
         }
     }

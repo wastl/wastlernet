@@ -9,33 +9,45 @@
 #include <modbus/modbus.h>
 #include <modbus/modbus-tcp.h>
 
+#define LOGS(level) LOG(level) << "[solvis] "
+
 absl::Status solvis::query(const absl::string_view host, int port,
                            const std::function<void(const SolvisData &)> &handler) {
     std::string host_(host);
 
     modbus_t *ctx;
 
+    LOGS(INFO) << "establishing Modbus connection";
+
     ctx = modbus_new_tcp(host_.c_str(), port);
     if (ctx == nullptr) {
-        LOG(ERROR) << "Unable to allocate libmodbus context";
+        LOGS(ERROR) << "Unable to allocate libmodbus context";
         return absl::InternalError("Unable to allocate libmodbus context");
     }
 
     if (modbus_connect(ctx) == -1) {
-        LOG(ERROR) <<"Connection failed: " << modbus_strerror(errno);
+        LOGS(ERROR) <<"Connection failed: " << modbus_strerror(errno);
         modbus_free(ctx);
         return absl::InternalError(absl::StrCat("Connection failed: ",modbus_strerror(errno)));
     }
 
+    LOGS(INFO) << "Reading Modbus registers";
+
     uint16_t tab_reg[64];
     int rc = modbus_read_registers(ctx, 33024, 18, tab_reg);
+
+    LOGS(INFO) << "closing Modbus connection";
+
+    modbus_close(ctx);
+    modbus_free(ctx);
+
     if (rc == -1) {
-        LOG(ERROR) << "Error reading register: " << modbus_strerror(errno);
+        LOGS(ERROR) << "Error reading register: " << modbus_strerror(errno);
         return absl::InternalError(absl::StrCat("Error reading register: ", modbus_strerror(errno)));
     }
 
     if (rc < 17) {
-        LOG(ERROR) << "Could not retrieve all registers" << std::endl;
+        LOGS(ERROR) << "Could not retrieve all registers" << std::endl;
         return absl::InternalError("Could not retrieve all registers");
     }
 
@@ -63,8 +75,7 @@ absl::Status solvis::query(const absl::string_view host, int port,
     data.set_vorlauf_heizkreis2(tab_reg[12] / 10.0);
     data.set_vorlauf_heizkreis3(tab_reg[15] / 10.0);
 
-    modbus_close(ctx);
-    modbus_free(ctx);
+    LOGS(INFO) << "running handler";
 
     handler(data);
 
