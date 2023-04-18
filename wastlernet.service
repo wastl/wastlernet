@@ -6,9 +6,9 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-User=root
+User=wastl
 Environment="GLOG_log_dir=/var/log/weather"
-ExecStart=/usr/bin/env /usr/local/bin/weather_exporter /usr/local/etc/weather_exporter.yml
+ExecStart=/usr/bin/env /usr/local/bin/wastlernet /usr/local/etc/wastlernet.textpb
 
 [Install]
 WantedBy=multi-user.target

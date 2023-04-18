@@ -29,4 +29,5 @@ message SolvisData {
 
   // Kessel
   optional float kessel = 18;                // S14
+  optional int32 kessel_leistung = 19;
 }

@@ -23,8 +23,9 @@ INSERT INTO solvis(
     vorlauf_heizkreis1,
     vorlauf_heizkreis2,
     vorlauf_heizkreis3,
-    kessel
-) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17))"
+    kessel,
+    kessel_leistung
+) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18))"
         );
     return absl::OkStatus();
 }
@@ -47,7 +48,8 @@ absl::Status solvis::SolvisWriter::write(pqxx::work &tx, const solvis::SolvisDat
                      data.vorlauf_heizkreis1(),
                      data.vorlauf_heizkreis2(),
                      data.vorlauf_heizkreis3(),
-                     data.kessel()
+                     data.kessel(),
+                     data.kessel_leistung()
                      );
     return absl::OkStatus();
 }

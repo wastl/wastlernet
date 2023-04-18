@@ -34,19 +34,25 @@ absl::Status solvis::query(const absl::string_view host, int port,
     LOGS(INFO) << "Reading Modbus registers";
 
     uint16_t tab_reg[64];
-    int rc = modbus_read_registers(ctx, 33024, 18, tab_reg);
+    uint16_t tab_reg2[8];
+    int rc1 = modbus_read_registers(ctx, 33024, 18, tab_reg);
+    int rc2 = modbus_read_registers(ctx, 33536, 5, tab_reg2);
 
     LOGS(INFO) << "closing Modbus connection";
 
     modbus_close(ctx);
     modbus_free(ctx);
 
-    if (rc == -1) {
+    if (rc1 == -1 || rc2 == -1) {
         LOGS(ERROR) << "Error reading register: " << modbus_strerror(errno);
         return absl::InternalError(absl::StrCat("Error reading register: ", modbus_strerror(errno)));
     }
 
-    if (rc < 17) {
+    if (rc1 < 17) {
+        LOGS(ERROR) << "Could not retrieve all registers" << std::endl;
+        return absl::InternalError("Could not retrieve all registers");
+    }
+    if (rc2 < 5) {
         LOGS(ERROR) << "Could not retrieve all registers" << std::endl;
         return absl::InternalError("Could not retrieve all registers");
     }
@@ -74,6 +80,8 @@ absl::Status solvis::query(const absl::string_view host, int port,
     data.set_vorlauf_heizkreis1(tab_reg[11] / 10.0);
     data.set_vorlauf_heizkreis2(tab_reg[12] / 10.0);
     data.set_vorlauf_heizkreis3(tab_reg[15] / 10.0);
+
+    data.set_kessel_leistung(tab_reg2[3] / 1000.0);
 
     LOGS(INFO) << "running handler";
 
