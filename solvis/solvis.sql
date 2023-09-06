@@ -19,8 +19,13 @@ CREATE TABLE solvis (
     vorlauf_heizkreis1 NUMERIC(4,1) NULL,
     vorlauf_heizkreis2 NUMERIC(4,1) NULL,
     vorlauf_heizkreis3 NUMERIC(4,1) NULL,
+    pumpe_heizkreis1 BOOLEAN NULL,
+    pumpe_heizkreis2 BOOLEAN NULL,
+    pumpe_heizkreis3 BOOLEAN NULL,
     kessel NUMERIC(4,1) NULL.
-    kessel_leistung NUMERIC(4,1) NULL
+    kessel_leistung NUMERIC(4,1) NULL,
+    kessel_ladepumpe BOOLEAN NULL,
+    kessel_brenner BOOLEAN NULL
 );
 
 SELECT create_hypertable('solvis','time');

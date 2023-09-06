@@ -69,12 +69,12 @@ namespace hafnertec {
         uri_builder builder(U("/schematic_files/9.cgi"));
         try {
             return client.request(methods::GET, builder.to_string()).then(
-                    [=](http_response response) {
+                    [=](const http_response& response) {
                         if (response.status_code() == status_codes::OK) {
 
                             std::string html = absl::StrCat("<html>", response.extract_string().get(), "</html>");
                             CDocument doc;
-                            doc.parse(html.c_str());
+                            doc.parse(html);
 
                             CSelection c = doc.find("html div");
 

@@ -88,7 +88,10 @@ T senec_parse(const json::value& v) {
 
 absl::Status senec::query(const std::string& uri, const std::function<void(const SenecData&)>& handler) {
     // Create http_client to send the request.
-    http_client client(U(uri));
+    http_client_config config;
+    config.set_validate_certificates(false);
+
+    http_client client(U(uri), config);
 
     // request data
     LOGS(INFO) << "Querying Senec contoller";
@@ -97,7 +100,7 @@ absl::Status senec::query(const std::string& uri, const std::function<void(const
     uri_builder builder(U("/lala.cgi"));
     try {
         return client.request(methods::POST, builder.to_string(), build_senec_request()).then(
-                [=](http_response response) {
+                [=](const http_response& response) {
                     if (response.status_code() == status_codes::OK) {
                         json::value result = response.extract_json(true).get();
 

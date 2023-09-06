@@ -34,16 +34,16 @@ absl::Status solvis::query(const absl::string_view host, int port,
     LOGS(INFO) << "Reading Modbus registers";
 
     uint16_t tab_reg[64];
-    uint16_t tab_reg2[8];
     int rc1 = modbus_read_registers(ctx, 33024, 18, tab_reg);
-    int rc2 = modbus_read_registers(ctx, 33536, 5, tab_reg2);
+    int rc2 = modbus_read_registers(ctx, 33536, 5, &tab_reg[20]);
+    int rc3 = modbus_read_registers(ctx, 33280, 20, &tab_reg[32]);
 
     LOGS(INFO) << "closing Modbus connection";
 
     modbus_close(ctx);
     modbus_free(ctx);
 
-    if (rc1 == -1 || rc2 == -1) {
+    if (rc1 == -1 || rc2 == -1 || rc3 == -1) {
         LOGS(ERROR) << "Error reading register: " << modbus_strerror(errno);
         return absl::InternalError(absl::StrCat("Error reading register: ", modbus_strerror(errno)));
     }
@@ -80,8 +80,24 @@ absl::Status solvis::query(const absl::string_view host, int port,
     data.set_vorlauf_heizkreis1(tab_reg[11] / 10.0);
     data.set_vorlauf_heizkreis2(tab_reg[12] / 10.0);
     data.set_vorlauf_heizkreis3(tab_reg[15] / 10.0);
+    data.set_pumpe_heizkreis1(tab_reg[32+2] > 0);
+    data.set_pumpe_heizkreis2(tab_reg[32+3] > 0);
+    data.set_pumpe_heizkreis3(tab_reg[32+4] > 0);
 
-    data.set_kessel_leistung(tab_reg2[3] / 1000.0);
+    //data.set_kessel_leistung(tab_reg[23] / 1000.0);
+    data.set_kessel_ladepumpe(tab_reg[32+12] > 0);
+    data.set_kessel_brenner(tab_reg[32+11] > 0);
+
+    // 26 kW maximale Leistung * aktuelle Leistung Ladepumpe in % / 100
+    data.set_kessel_leistung(0.26 * tab_reg[46+3] * 0.1);
+
+    for (int i = 0; i<14; i++) {
+        data.add_ausgang(tab_reg[32+i] * 0.5);
+    }
+
+    for (int i=0; i<6; i++) {
+        data.add_analog_out(tab_reg[46+i] * 0.1);
+    }
 
     LOGS(INFO) << "running handler";
 

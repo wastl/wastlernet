@@ -35,7 +35,7 @@ namespace weather {
 
         LOGW(INFO) << "starting HTTP listener on address " << uri;
 
-        listener->support([=](http_request request){
+        listener->support([=](const http_request& request){
             auto uri = request.relative_uri();
             auto q = web::uri::split_query(uri.query());
 

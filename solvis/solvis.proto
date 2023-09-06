@@ -24,10 +24,22 @@ message SolvisData {
 
   // Heizkreise
   optional float vorlauf_heizkreis1 = 15;   // S12
+  optional bool pumpe_heizkreis1 = 23;      // A3 > 0
+
   optional float vorlauf_heizkreis2 = 16;   // S13
+  optional bool pumpe_heizkreis2 = 24;      // A4 > 0
+
   optional float vorlauf_heizkreis3 = 17;   // S16
+  optional bool pumpe_heizkreis3 = 25;      // A5 > 0
 
   // Kessel
   optional float kessel = 18;                // S14
   optional int32 kessel_leistung = 19;
+  optional bool kessel_ladepumpe = 20;       // A13 > 0
+  optional bool kessel_brenner = 26;         // A12 > 0
+
+  repeated float ausgang = 21;               // A1-A14
+  repeated float analog_out = 22;            // O1-O6;
+
+  // last value: 26
 }
