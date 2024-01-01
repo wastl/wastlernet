@@ -3,7 +3,10 @@
 //
 
 #include "solvis_client.h"
+#include "include/utility.h"
 
+#include <fstream>
+#include <limits.h>
 #include <absl/strings/str_cat.h>
 #include <glog/logging.h>
 #include <modbus/modbus.h>
@@ -11,13 +14,20 @@
 
 #define LOGS(level) LOG(level) << "[solvis] "
 
+int uint2int(uint16_t u) {
+    if (u <= (unsigned int)INT_MAX)
+        return (int)u;
+    else
+        return -(int)~u - 1;
+}
+
 absl::Status solvis::query(const absl::string_view host, int port,
                            const std::function<void(const SolvisData &)> &handler) {
     std::string host_(host);
 
     modbus_t *ctx;
 
-    LOGS(INFO) << "establishing Modbus connection";
+    LOGS(INFO) << "Establishing Modbus connection";
 
     ctx = modbus_new_tcp(host_.c_str(), port);
     if (ctx == nullptr) {
@@ -25,10 +35,18 @@ absl::Status solvis::query(const absl::string_view host, int port,
         return absl::InternalError("Unable to allocate libmodbus context");
     }
 
-    if (modbus_connect(ctx) == -1) {
-        LOGS(ERROR) <<"Connection failed: " << modbus_strerror(errno);
+    auto c_st = wastlernet::retry_with_backoff([ctx]() {
+        int rc = modbus_connect(ctx);
+        if (rc == -1) {
+            return absl::InternalError(absl::StrCat("Connection failed: ",modbus_strerror(errno)));
+        }
+        return absl::OkStatus();
+    }, 3);
+
+    if (!c_st.ok()) {
+        LOGS(ERROR) << c_st;
         modbus_free(ctx);
-        return absl::InternalError(absl::StrCat("Connection failed: ",modbus_strerror(errno)));
+        return c_st;
     }
 
     LOGS(INFO) << "Reading Modbus registers";
@@ -38,7 +56,7 @@ absl::Status solvis::query(const absl::string_view host, int port,
     int rc2 = modbus_read_registers(ctx, 33536, 5, &tab_reg[20]);
     int rc3 = modbus_read_registers(ctx, 33280, 20, &tab_reg[32]);
 
-    LOGS(INFO) << "closing Modbus connection";
+    LOGS(INFO) << "Closing Modbus connection";
 
     modbus_close(ctx);
     modbus_free(ctx);
@@ -68,7 +86,7 @@ absl::Status solvis::query(const absl::string_view host, int port,
     data.set_zirkulation(tab_reg[10] / 10.0);
     data.set_durchfluss(tab_reg[17]);
 
-    data.set_solar_kollektor(tab_reg[7] / 10.0);
+    data.set_solar_kollektor(uint2int(tab_reg[7]) / 10.0);
     data.set_solar_vorlauf(tab_reg[4] / 10.0);
     data.set_solar_ruecklauf(tab_reg[5] / 10.0);
     data.set_solar_waermetauscher(tab_reg[6] / 10.0);
@@ -98,6 +116,10 @@ absl::Status solvis::query(const absl::string_view host, int port,
     for (int i=0; i<6; i++) {
         data.add_analog_out(tab_reg[46+i] * 0.1);
     }
+
+    std::ofstream dbg("/tmp/solvis.textpb");
+    dbg << data.DebugString();
+    dbg.close();
 
     LOGS(INFO) << "running handler";
 

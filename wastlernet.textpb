@@ -20,7 +20,7 @@ solvis {
 }
 
 weather {
-  listen: "http://192.168.178.2: 41001/"
+  listen: "http://192.168.178.2:41001/"
 }
 
 timescaledb {
@@ -29,4 +29,8 @@ timescaledb {
   user: "wastlernet"
   password: "wastlernet"
   database: "wastlernet"
+}
+
+rest {
+  listen: "http://192.168.178.2:41000/"
 }

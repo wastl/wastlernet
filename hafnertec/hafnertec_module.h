@@ -18,9 +18,13 @@ namespace hafnertec {
         absl::Status Query(std::function<absl::Status(const HafnertecData &)> handler) override;
 
     public:
-        HafnertecModule(const wastlernet::TimescaleDB& db_cfg, const wastlernet::Hafnertec& client_cfg)
-        : wastlernet::PollingModule<HafnertecData>(db_cfg, new HafnertecWriter, client_cfg.poll_interval()),
+        HafnertecModule(const wastlernet::TimescaleDB& db_cfg, const wastlernet::Hafnertec& client_cfg, wastlernet::StateCache* c)
+        : wastlernet::PollingModule<HafnertecData>(db_cfg, new HafnertecWriter, c, client_cfg.poll_interval()),
                 uri(client_cfg.host()), user(client_cfg.user()), password(client_cfg.password()) {}
+
+        std::string Name() override {
+            return "hafnertec";
+        }
     };
 };
 #endif //WASTLERNET_HAFNERTEC_MODULE_H

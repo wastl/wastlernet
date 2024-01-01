@@ -21,12 +21,13 @@ ADD_SUBDIRECTORY(weather)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
-ADD_EXECUTABLE(wastlernet main.cpp include/module.h)
+ADD_EXECUTABLE(wastlernet main.cpp include/module.h include/updater.h include/utility.h include/utility.cpp)
 TARGET_LINK_LIBRARIES(wastlernet
         config
         hafnertec_client solvis_client senec_client weather_client
         cpprest pthread glog gumbo gumbo_query
-        absl_strings absl_status absl_statusor absl_str_format_internal absl_throw_delegate
+        absl_strings absl_status absl_statusor absl_str_format_internal absl_throw_delegate absl_hash absl_city
+        absl_raw_hash_set absl_synchronization
         crypto pqxx
         ${PostgreSQL_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}

@@ -24,9 +24,13 @@ namespace weather {
         void Wait() override;
 
     public:
-        WeatherModule(const wastlernet::TimescaleDB &db_cfg, const wastlernet::Weather& client_cfg)
-                : wastlernet::Module<WeatherData>(db_cfg, new WeatherWriter),
+        WeatherModule(const wastlernet::TimescaleDB &db_cfg, const wastlernet::Weather& client_cfg, wastlernet::StateCache* c)
+                : wastlernet::Module<WeatherData>(db_cfg, new WeatherWriter, c),
                   uri(client_cfg.listen()) { }
+
+        std::string Name() override {
+            return "weather";
+        }
     };
 }
 #endif //WASTLERNET_WEATHER_MODULE_H
