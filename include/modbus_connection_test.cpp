@@ -17,14 +17,15 @@ protected:
     void SetUp() override {
         // Code here will be called immediately after the constructor (right
         // before each test).
-        running_ = true;
 
         server_thread_.reset(new std::thread([=]() {
             ASSERT_EQ(this->runModbusTCPServer(15002, 50), 0);
         }));
 
         // Give the server a moment to start up and bind to the port
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        while (!running_) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
     }
 
     void TearDown() override {
@@ -41,7 +42,7 @@ private:
     bool running_ = false;
     std::unique_ptr<std::thread> server_thread_;
 
-    int runModbusTCPServer(int port, int num_registers) const {
+    int runModbusTCPServer(int port, int num_registers) {
         modbus_t *ctx = nullptr;
         modbus_mapping_t *mb_mapping = nullptr;
         int server_socket = -1;
@@ -91,6 +92,7 @@ private:
         }
         std::cout << "Modbus TCP server listening on port " << port << std::endl;
 
+        running_ = true;
         // 4. Main server loop to handle client connections
         while (running_) {
             // Accept a new client connection

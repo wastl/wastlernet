@@ -22,9 +22,6 @@ protected:
 
     void SetUp() override {
         server_thread_ = startListener(kAddress);
-
-        // Give the server a moment to start up and bind to the port
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
     void TearDown() override {
