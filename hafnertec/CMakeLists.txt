@@ -12,5 +12,3 @@ ADD_LIBRARY(hafnertec_client hafnertec_client.cpp hafnertec_client.h ${PROTO_HEA
 
 add_executable(hafnertec_modbus_debug hafnertec_modbus_debug.cpp)
 target_link_libraries(hafnertec_modbus_debug PUBLIC pthread glog::glog absl_strings ${MODBUS_LIBRARY}  )
-# add_executable(hafnertec_exporter main.cpp hafnertec_client.cpp hafnertec_client.h hafnertec_influx.cpp hafnertec_influx.h)
-# target_link_libraries(hafnertec_exporter PUBLIC cpprest pthread ssl crypto yaml-cpp glog gumbo gumbo_query absl_strings absl_status absl_throw_delegate)

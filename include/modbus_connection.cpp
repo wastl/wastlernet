@@ -100,7 +100,7 @@ int32_t wastlernet::ModbusConnection::toInt32(const uint16_t *u) {
 }
 
 int64_t wastlernet::ModbusConnection::toInt64(const uint16_t *u) {
-    return ((uint64_t)u[0] << 48) | (u[1] << 32) | (u[2] << 16) | u[3];
+    return ((uint64_t)u[0] << 48) | ((uint64_t)u[1] << 32) | ((uint64_t)u[2] << 16) | u[3];
 }
 
 float wastlernet::ModbusConnection::toFloat(const uint16_t *u) {
