@@ -37,7 +37,7 @@ private:
     std::unique_ptr<http_listener> server_thread_;
 
 
-    // Start a listener serving the current state of different modules as JSON.
+    // Start a listener for test purposes that echos back the request as JSON
     std::unique_ptr<http_listener> startListener(const std::string &listen) {
         auto listener = std::make_unique<http_listener>(listen);
 
@@ -58,7 +58,8 @@ private:
                     // /test path is used for testing GET and POST
                     web::json::value output = web::json::value::object({
                         {"method", web::json::value::string(request.method())},
-                        {"path", web::json::value::string(uri.path())}
+                        {"path", web::json::value::string(uri.path())},
+                        {"body", request.extract_json().get()}
                     });
 
                     request.reply(web::http::status_codes::OK, output).get();
@@ -79,6 +80,7 @@ private:
     }
 };
 
+// Test implementations of wastlernet::HttpConnection for different methods and paths
 namespace {
     class TestHTTPGetConnection : public wastlernet::HttpConnection {
     public:
@@ -98,6 +100,12 @@ namespace {
 
     protected:
         std::string Name() override { return "TestHTTPPostConnection"; }
+
+        std::optional<web::json::value> RequestBody() override {
+            return web::json::value::object({
+                {"foo", web::json::value::string("bar")}
+            });
+        }
     };
 
     class TestHTTPNotFoundConnection : public wastlernet::HttpConnection {
@@ -111,6 +119,7 @@ namespace {
     };
 }
 
+// Test initialization and GET request
 TEST_F(HTTPTest, Get) {
     TestHTTPGetConnection conn;
 
@@ -128,6 +137,7 @@ TEST_F(HTTPTest, Get) {
     ASSERT_TRUE(st.ok()) << st.message();
 }
 
+// Test initialization and POST request
 TEST_F(HTTPTest, Post) {
     TestHTTPPostConnection conn;
 
@@ -139,12 +149,14 @@ TEST_F(HTTPTest, Post) {
 
         EXPECT_EQ("POST", json.at("method").as_string());
         EXPECT_EQ("/test", json.at("path").as_string());
+        EXPECT_EQ("bar", json.at("body").at("foo").as_string());
 
         return absl::OkStatus();
     });
     ASSERT_TRUE(st.ok()) << st.message();
 }
 
+// Test initialization and request to non-existant URL
 TEST_F(HTTPTest, NotFound) {
     TestHTTPNotFoundConnection conn;
 
