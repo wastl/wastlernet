@@ -1,0 +1,59 @@
+syntax = "proto2";
+package fronius;
+
+message FroniusData {
+  optional Leistung leistung = 1;
+  optional Quellen quellen = 2;
+  optional Batterie batterie = 3;
+  optional Gesamt gesamt = 4;
+  optional System system = 5;
+  repeated EnergyData ac_data = 6;
+  repeated EnergyData mppt = 7;
+}
+
+message Leistung {
+  optional double hausverbrauch = 1;
+  optional double pv_leistung = 2;
+  optional double netz_leistung = 3;
+  optional double batterie_leistung = 4;
+}
+
+message Quellen {
+  optional double einspeisung = 1;
+  optional double bezug = 2;
+  optional double laden = 3;
+  optional double entladen = 4;
+}
+
+message Gesamt {
+  optional double strom = 1;
+  optional double einspeisung = 2;
+  optional double bezug = 3;
+  optional double verbrauch = 4;
+  optional double produktion = 5;
+}
+
+message Batterie {
+  optional double temperatur = 1;
+  optional double soc = 2;
+  optional double spannung = 3;
+  optional double leistung = 4;
+}
+
+message System {
+  optional uint32 pv_begrenzung = 1;
+  optional double ac_leistung = 2;
+  optional double frequenz = 3;
+  optional uint32 status = 4;
+  optional uint32 betriebsstunden = 5;
+  optional uint32 anzahl_batterien = 6;
+  optional double gehaeuse_temperatur = 7;
+  optional double mcu_temperatur = 8;
+  optional uint32 fan_speed = 9;
+}
+
+message EnergyData {
+  optional double strom = 1;
+  optional double spannung = 2;
+  optional double leistung = 3;
+}

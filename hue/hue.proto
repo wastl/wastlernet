@@ -1,0 +1,33 @@
+syntax = "proto2";
+package hue;
+
+message HueData {
+  repeated Room rooms = 1;
+  repeated Sensor sensors = 2;
+}
+
+message Room {
+  optional string name = 1;
+  optional bool any_on = 2;
+  optional bool all_on = 3;
+  repeated Light lights = 4;
+}
+
+message Light {
+  optional string uid = 1;
+  optional string name = 2;
+  optional bool on = 3;
+  optional bool reachable = 4;
+  optional int32 brightness = 5;
+}
+
+message Sensor {
+  optional string uid = 1;
+  optional string name = 2;
+  optional int64 lightLevel = 3; // lux
+  optional bool daylight = 4;
+  optional bool dark = 5;
+  optional bool presence = 6;
+  optional bool reachable = 7;
+  optional double temperature = 8;
+}

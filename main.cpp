@@ -25,6 +25,7 @@ using namespace std::chrono;
 using google::protobuf::io::ZeroCopyInputStream;
 using google::protobuf::io::FileInputStream;
 using namespace google::protobuf::util;
+using namespace std::chrono_literals;
 
 using web::http::http_request;
 using web::http::experimental::listener::http_listener;
@@ -97,6 +98,7 @@ int main(int argc, char *argv[]) {
     }
 
     google::InitGoogleLogging(argv[0]);
+    google::EnableLogCleaner(24h * 3);
 
     wastlernet::Config config;
 

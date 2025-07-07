@@ -1,10 +1,12 @@
 INCLUDE(FindProtobuf)
+FIND_PACKAGE (glog 0.7.1 REQUIRED)
 FIND_PACKAGE(Protobuf REQUIRED)
 INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/..)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/..)
 PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HEADER senec.proto)
 
+add_compile_definitions(-DGLOG_USE_GLOG_EXPORT)
 ADD_LIBRARY(senec_client
         senec_client.cpp senec_client.h
         senec_timescaledb.cpp senec_timescaledb.h

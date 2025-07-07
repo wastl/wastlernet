@@ -25,6 +25,13 @@ message Solvis {
   optional int32 poll_interval = 3;
 }
 
+message Fronius {
+  // MODBUS host and port
+  optional string host = 1;
+  optional int32 port = 2;
+  optional int32 poll_interval = 3;
+}
+
 message Hafnertec {
   // HTTP URL of web interface, HTTP user and password
   optional string host = 1;
@@ -43,9 +50,14 @@ message Fritzbox {
 }
 
 message Hue {
+  repeated HueBridge bridge = 1;
+}
+
+message HueBridge {
   optional string host = 1;
-  optional string username = 2;
-  optional int32 port = 3;
+  optional int32 port = 2;
+  optional string username = 3;
+  optional string client_key = 4;
 }
 
 message TimescaleDB {
