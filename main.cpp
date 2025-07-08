@@ -11,7 +11,9 @@
 #include <absl/status/status.h>
 #include <absl/status/statusor.h>
 #include <cpprest/http_listener.h>
+#include <prometheus/exposer.h>
 
+#include "base/metrics.h"
 #include "config/config.pb.h"
 
 #include "hafnertec/hafnertec_module.h"
@@ -99,6 +101,9 @@ int main(int argc, char *argv[]) {
 
     google::InitGoogleLogging(argv[0]);
     google::EnableLogCleaner(24h * 3);
+
+    prometheus::Exposer exposer{"127.0.0.1:32154"};
+    exposer.RegisterCollectable(wastlernet::metrics::WastlernetMetrics::GetInstance().registry);
 
     wastlernet::Config config;
 

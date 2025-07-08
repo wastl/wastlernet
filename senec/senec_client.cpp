@@ -10,6 +10,7 @@
 #include <glog/logging.h>
 #include <absl/strings/str_cat.h>
 
+#include "base/metrics.h"
 #include "senec_client.h"
 
 using namespace utility; // Common utilities like string conversions
@@ -55,7 +56,7 @@ namespace {
 }
 
 senec::SenecClient::SenecClient(const std::string &base_url)
-: HttpConnection(base_url, "/lala.cgi", POST) {
+    : HttpConnection(base_url, "/lala.cgi", POST) {
     request_body_["PV1"]["POWER_RATIO"] = json::value::string("");
     request_body_["PM1OBJ1"]["P_TOTAL"] = json::value::string("");
     request_body_["PM1OBJ1"]["FREQ"] = json::value::string("");
@@ -83,11 +84,13 @@ senec::SenecClient::SenecClient(const std::string &base_url)
     request_body_["FAN_SPEED"]["INV_LV"] = json::value::string("");
     request_body_["PV1"]["MPP_CUR"] = json::value::string("");
     request_body_["PV1"]["MPP_VOL"] = json::value::string("");
-    request_body_["PV1"]["MPP_POWER"] = json::value::string("");    
+    request_body_["PV1"]["MPP_POWER"] = json::value::string("");
 }
 
 absl::Status senec::SenecClient::Query(const std::function<void(const SenecData &)> &handler) {
-    return Execute([=](const http_response &response) {
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    auto st = Execute([=](const http_response &response) {
         if (response.status_code() == status_codes::OK) {
             json::value result = response.extract_json(true).get();
 
@@ -151,12 +154,25 @@ absl::Status senec::SenecClient::Query(const std::function<void(const SenecData 
 
             handler(data);
 
+            wastlernet::metrics::WastlernetMetrics::GetInstance().senec_query_counter.Increment();
+
             return absl::OkStatus();
         } else {
             LOGS(ERROR) << "SENEC query failed: " << response.reason_phrase();
+
+            wastlernet::metrics::WastlernetMetrics::GetInstance().senec_error_counter.Increment();
+
             return absl::InternalError(absl::StrCat("SENEC query failed: ", response.reason_phrase()));
         }
     });
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end_time - start_time;
+    wastlernet::metrics::WastlernetMetrics::GetInstance().senec_duration_ms.Observe(
+        std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+
+
+    return st;
 }
 
 web::http::client::http_client_config senec::SenecClient::ClientConfig() {

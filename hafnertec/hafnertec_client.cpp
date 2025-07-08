@@ -15,11 +15,13 @@
 
 #include "hafnertec_client.h"
 
-using namespace utility;                    // Common utilities like string conversions
-using namespace web;                        // Common features like URIs.
-using namespace web::http;                  // Common HTTP functionality
-using namespace web::http::client;          // HTTP client features
-using namespace concurrency::streams;       // Asynchronous streams
+#include "base/metrics.h"
+
+using namespace utility; // Common utilities like string conversions
+using namespace web; // Common features like URIs.
+using namespace web::http; // Common HTTP functionality
+using namespace web::http::client; // HTTP client features
+using namespace concurrency::streams; // Asynchronous streams
 
 #define LOGH(level) LOG(level) << "[hafnertec] "
 
@@ -54,7 +56,9 @@ namespace hafnertec {
     }
 
     absl::Status HafnertecClient::Query(const std::function<void(const HafnertecData &)> &handler) {
-        return Execute([=](const http_response& response) {
+        auto start_time = std::chrono::high_resolution_clock::now();
+
+        auto st = Execute([=](const http_response &response) {
             if (response.status_code() == status_codes::OK) {
                 std::string html = absl::StrCat("<html>", response.extract_string().get(), "</html>");
                 CDocument doc;
@@ -70,17 +74,29 @@ namespace hafnertec {
                 data.set_durchlauf(parse_numeric(c.nodeAt(5).text()));
                 data.set_ventilator(parse_numeric(c.nodeAt(9).text()));
 
-                LOGH(INFO) << "Received data from Hafnertec controller (chamber temperature "  << parse_numeric(c.nodeAt(1).text()) << ")";
+                LOGH(INFO) << "Received data from Hafnertec controller (chamber temperature " << parse_numeric(
+                    c.nodeAt(1).text()) << ")";
                 LOGH(INFO) << "running handler";
 
                 handler(data);
 
+                wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_query_counter.Increment();
+
                 return absl::OkStatus();
             } else {
+                wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_error_counter.Increment();
                 LOGH(ERROR) << "Hafnertec controller query failed: " << response.reason_phrase();
-                return absl::InternalError(absl::StrCat("Hafnertec controller query failed: ", response.reason_phrase()));
+                return absl::InternalError(
+                    absl::StrCat("Hafnertec controller query failed: ", response.reason_phrase()));
             }
         });
+
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end_time - start_time;
+        wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_duration_ms.Observe(
+            std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+
+        return st;
     }
 
     http_client_config HafnertecClient::ClientConfig() {
@@ -89,4 +105,4 @@ namespace hafnertec {
         config.set_credentials(credentials);
         return config;
     }
-}  // namespace hafnertec
+} // namespace hafnertec

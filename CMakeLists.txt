@@ -64,6 +64,14 @@ endif()
 
 find_package(GTest REQUIRED)
 
+find_package(prometheus-cpp REQUIRED)
+if (TARGET prometheus-cpp::core)
+    message(STATUS "Prometheus C++ library found successfully.")
+else()
+    message(FATAL_ERROR "Could not find Prometheus C++ library. Ensure it is available on your system.")
+endif()
+#target_link_libraries(your_target_name PRIVATE prometheus-cpp::core prometheus-cpp::pull)
+
 ADD_SUBDIRECTORY(config)
 ADD_SUBDIRECTORY(hafnertec)
 ADD_SUBDIRECTORY(hue)
@@ -83,6 +91,7 @@ ADD_EXECUTABLE(wastlernet
         main.cpp
         base/module.h base/updater.h
         base/utility.h base/utility.cpp
+        base/metrics.h base/metrics.cpp
         base/modbus_connection.h base/modbus_connection.cpp
         base/http_connection.h base/http_connection.cpp
 )
@@ -94,6 +103,7 @@ TARGET_LINK_LIBRARIES(wastlernet
         pqxx
         OpenSSL::Crypto
         glog::glog
+        prometheus-cpp::core prometheus-cpp::pull
         ${PostgreSQL_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
         ${Protobuf_LIBRARIES}
@@ -103,11 +113,13 @@ ADD_EXECUTABLE(modbus_test
         base/modbus_connection_test.cpp
         base/modbus_connection.h base/modbus_connection.cpp
         base/utility.h base/utility.cpp
+        base/metrics.h base/metrics.cpp
 )
 TARGET_LINK_LIBRARIES(modbus_test
         GTest::gtest GTest::gtest_main
         Threads::Threads
         glog::glog
+        prometheus-cpp::core prometheus-cpp::pull
         ${ABSL_LIBRARIES}
         ${MODBUS_LIBRARY}
 )
@@ -116,36 +128,46 @@ ADD_EXECUTABLE(http_test
         base/http_connection_test.cpp
         base/http_connection.h base/http_connection.cpp
         base/utility.h base/utility.cpp
+        base/metrics.h base/metrics.cpp
 )
 TARGET_LINK_LIBRARIES(http_test
         GTest::gtest GTest::gtest_main
         Threads::Threads
         glog::glog
+        prometheus-cpp::core prometheus-cpp::pull
         ${ABSL_LIBRARIES}
         OpenSSL::Crypto
         cpprestsdk::cpprest
 )
 
-ADD_EXECUTABLE(hafnertec_client_test hafnertec/hafnertec_client_test.cpp ${HTTP_SRC} ${PROTO_SRC})
+ADD_EXECUTABLE(hafnertec_client_test
+        hafnertec/hafnertec_client_test.cpp
+        base/metrics.h base/metrics.cpp
+        ${HTTP_SRC} ${PROTO_SRC})
 TARGET_LINK_LIBRARIES(hafnertec_client_test
         hafnertec_client
         GTest::gtest GTest::gtest_main
         Threads::Threads
         gumbo gumbo_query
         glog::glog
+        prometheus-cpp::core prometheus-cpp::pull
         ${ABSL_LIBRARIES}
         OpenSSL::Crypto
         ${Protobuf_LIBRARIES}
         cpprestsdk::cpprest
 )
 
-ADD_EXECUTABLE(senec_client_test senec/senec_client_test.cpp ${HTTP_SRC} ${PROTO_SRC})
+ADD_EXECUTABLE(senec_client_test
+        senec/senec_client_test.cpp
+        base/metrics.h base/metrics.cpp
+        ${HTTP_SRC} ${PROTO_SRC})
 TARGET_LINK_LIBRARIES(senec_client_test
         senec_client
         GTest::gtest GTest::gtest_main
         Threads::Threads
         gumbo gumbo_query
         glog::glog
+        prometheus-cpp::core prometheus-cpp::pull
         ${ABSL_LIBRARIES}
         OpenSSL::Crypto
         ${Protobuf_LIBRARIES}
