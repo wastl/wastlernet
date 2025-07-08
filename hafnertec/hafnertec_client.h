@@ -6,7 +6,7 @@
 #include <absl/strings/string_view.h>
 #include <absl/status/status.h>
 
-#include "include/http_connection.h"
+#include "base/http_connection.h"
 #include "hafnertec/hafnertec.pb.h"
 
 #ifndef HAFNERTEC_EXPORTER_HAFNERTEC_CLIENT_H

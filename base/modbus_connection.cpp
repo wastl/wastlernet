@@ -2,7 +2,7 @@
 // Created by wastl on 03.07.25.
 //
 #include "modbus_connection.h"
-#include "include/utility.h"
+#include "base/utility.h"
 
 #include <absl/strings/str_cat.h>
 #include <glog/logging.h>

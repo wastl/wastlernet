@@ -77,14 +77,14 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(ABSL_LIBRARIES absl::strings absl::status absl::statusor absl::str_format_internal absl::throw_delegate absl::hash absl::city
         absl::raw_hash_set absl::synchronization)
-SET(HTTP_SRC ../include/http_connection.h ../include/http_connection.cpp)
+SET(HTTP_SRC ../base/http_connection.h ../base/http_connection.cpp)
 
 ADD_EXECUTABLE(wastlernet
         main.cpp
-        include/module.h include/updater.h
-        include/utility.h include/utility.cpp
-        include/modbus_connection.h include/modbus_connection.cpp
-        include/http_connection.h include/http_connection.cpp
+        base/module.h base/updater.h
+        base/utility.h base/utility.cpp
+        base/modbus_connection.h base/modbus_connection.cpp
+        base/http_connection.h base/http_connection.cpp
 )
 TARGET_LINK_LIBRARIES(wastlernet
         config
@@ -100,9 +100,9 @@ TARGET_LINK_LIBRARIES(wastlernet
         ${MODBUS_LIBRARY})
 
 ADD_EXECUTABLE(modbus_test
-        include/modbus_connection_test.cpp
-        include/modbus_connection.h include/modbus_connection.cpp
-        include/utility.h include/utility.cpp
+        base/modbus_connection_test.cpp
+        base/modbus_connection.h base/modbus_connection.cpp
+        base/utility.h base/utility.cpp
 )
 TARGET_LINK_LIBRARIES(modbus_test
         GTest::gtest GTest::gtest_main
@@ -113,9 +113,9 @@ TARGET_LINK_LIBRARIES(modbus_test
 )
 
 ADD_EXECUTABLE(http_test
-        include/http_connection_test.cpp
-        include/http_connection.h include/http_connection.cpp
-        include/utility.h include/utility.cpp
+        base/http_connection_test.cpp
+        base/http_connection.h base/http_connection.cpp
+        base/utility.h base/utility.cpp
 )
 TARGET_LINK_LIBRARIES(http_test
         GTest::gtest GTest::gtest_main

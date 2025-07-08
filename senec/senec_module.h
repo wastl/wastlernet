@@ -2,7 +2,7 @@
 // Created by wastl on 08.04.23.
 //
 #include "senec_client.h"
-#include "include/module.h"
+#include "base/module.h"
 #include "senec/senec.pb.h"
 #include "senec/senec_timescaledb.h"
 

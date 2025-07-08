@@ -4,7 +4,7 @@
 #include <string>
 
 
-#include "include/modbus_connection.h"
+#include "base/modbus_connection.h"
 #include "config/config.pb.h"
 
 #ifndef WASTLERNET_SOLVIS_MODBUS_H

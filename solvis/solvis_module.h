@@ -1,7 +1,7 @@
 //
 // Created by wastl on 07.04.23.
 //
-#include "include/module.h"
+#include "base/module.h"
 #include "solvis/solvis.pb.h"
 #include "solvis/solvis_modbus.h"
 #include "solvis/solvis_timescaledb.h"

@@ -1,7 +1,7 @@
 //
 // Created by wastl on 02.07.25.
 //
-#include "include/module.h"
+#include "base/module.h"
 #include "fronius/fronius.pb.h"
 #include "fronius/fronius_modbus.h"
 #include "fronius/fronius_timescaledb.h"

@@ -4,7 +4,7 @@
 #include <functional>
 #include <absl/status/status.h>
 
-#include "include/http_connection.h"
+#include "base/http_connection.h"
 #include "senec/senec.pb.h"
 
 #ifndef SENEC_EXPORTER_SENEC_CLIENT_H

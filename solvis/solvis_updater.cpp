@@ -3,7 +3,7 @@
 //
 
 #include "solvis_updater.h"
-#include "include/utility.h"
+#include "base/utility.h"
 
 #include "weather/weather.pb.h"
 #include <glog/logging.h>

@@ -2,7 +2,7 @@
 // Created by wastl on 07.04.23.
 //
 #include "hafnertec_client.h"
-#include "include/module.h"
+#include "base/module.h"
 #include "hafnertec/hafnertec.pb.h"
 #include "hafnertec/hafnertec_timescaledb.h"
 
