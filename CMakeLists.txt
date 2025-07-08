@@ -139,9 +139,23 @@ TARGET_LINK_LIBRARIES(hafnertec_client_test
         cpprestsdk::cpprest
 )
 
-gtest_discover_tests(hafnertec_client_test)
+ADD_EXECUTABLE(senec_client_test senec/senec_client_test.cpp ${HTTP_SRC} ${PROTO_SRC})
+TARGET_LINK_LIBRARIES(senec_client_test
+        senec_client
+        GTest::gtest GTest::gtest_main
+        Threads::Threads
+        gumbo gumbo_query
+        glog::glog
+        ${ABSL_LIBRARIES}
+        OpenSSL::Crypto
+        ${Protobuf_LIBRARIES}
+        cpprestsdk::cpprest
+)
+
 gtest_discover_tests(modbus_test)
 gtest_discover_tests(http_test)
+gtest_discover_tests(hafnertec_client_test)
+gtest_discover_tests(senec_client_test)
 
 #ADD_EXECUTABLE(hue_debug hue/hue_debug.cpp)
 #TARGET_LINK_LIBRARIES(hue_debug PUBLIC hue_client ${HUE_LIBRARY} ${GLOG_LIBRARY} ${Protobuf_LIBRARIES} config glog::glog crypto absl_strings absl_status absl_hash absl_city absl_raw_hash_set absl_throw_delegate)

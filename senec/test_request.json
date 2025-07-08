@@ -1,0 +1,42 @@
+{
+  "PV1": {"POWER_RATIO":  ""},
+  "PM1OBJ1": {
+    "P_TOTAL": "",
+    "FREQ": "",
+    "U_AC": "",
+    "I_AC": "",
+    "P_AC": ""
+  },
+  "ENERGY": {
+    "GUI_BAT_DATA_FUEL_CHARGE": "",
+    "GUI_BAT_DATA_POWER": "",
+    "GUI_BAT_DATA_VOLTAGE": "",
+    "GUI_HOUSE_POW": "",
+    "GUI_GRID_POW": "",
+    "GUI_INVERTER_POWER": "",
+    "STAT_STATE": "",
+    "STAT_HOURS_OF_OPERATION": ""
+  },
+  "BMS": {
+    "NR_INSTALLED": "",
+    "TOTAL_CURRENT": ""
+  },
+  "STATISTIC": {
+    "LIVE_GRID_IMPORT": "",
+    "LIVE_GRID_EXPORT": "",
+    "LIVE_HOUSE_CONS": "",
+    "LIVE_PV_GEN": "",
+    "CURRENT_STATE": ""
+  },
+  "TEMPMEASURE": {
+    "BATTERY_TEMP": "",
+    "CASE_TEMP": "",
+    "MCU_TEMP": ""
+  },
+  "FAN_SPEED":  {"INV_LV": ""},
+  "PV1": {
+    "MPP_CUR": "",
+    "MPP_VOL": "",
+    "MPP_POWER": ""
+  }
+}
