@@ -119,6 +119,12 @@ private:
                     // empty path is connection init
                     request.reply(web::http::status_codes::OK).get();
                 } else if (path == "lala.cgi") {
+                    auto body = request.extract_json().get();
+
+                    // Test if request body is present
+                    ASSERT_TRUE(body.has_object_field("PV1"));
+                    ASSERT_TRUE(body.has_object_field("ENERGY"));
+
                     request.reply(web::http::status_codes::OK, kContent, "text/json").get();
                 } else {
                     // everything else should return NOT FOUND

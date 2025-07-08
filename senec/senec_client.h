@@ -11,12 +11,9 @@
 #define SENEC_EXPORTER_SENEC_CLIENT_H
 
 namespace senec {
-     absl::Status query(const std::string& uri, const std::function<void(const SenecData&)>& handler);
-
      class SenecClient : public wastlernet::HttpConnection {
      public:
-          SenecClient(const std::string &base_url)
-               : HttpConnection(base_url, "/lala.cgi", POST) { }
+          explicit SenecClient(const std::string &base_url);
 
           absl::Status Query(const std::function<void(const SenecData&)>& handler);
 
@@ -26,6 +23,9 @@ namespace senec {
           web::http::client::http_client_config ClientConfig() override;
 
           std::optional<web::json::value> RequestBody() override;
+
+     private:
+          web::json::value request_body_;
      };
 }
 

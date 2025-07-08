@@ -13,9 +13,6 @@
 #define HAFNERTEC_EXPORTER_HAFNERTEC_CLIENT_H
 
 namespace hafnertec {
-    absl::Status query(const std::string& uri, const std::string& user, const std::string& password,
-                       const std::function<void(const HafnertecData &)> &handler);
-
     class HafnertecClient : public wastlernet::HttpConnection {
     public:
         HafnertecClient(const std::string &base_url, const std::string &user, const std::string &password)

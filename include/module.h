@@ -33,6 +33,8 @@ namespace wastlernet {
                 : conn_(writer, config.database(), config.host(), config.port(), config.user(), config.password()), current_state_(current_state) {
         }
 
+        virtual ~Module() = default;
+
         // Perform initialization needed before starting.
         virtual absl::Status Init() {
             return conn_.Init();

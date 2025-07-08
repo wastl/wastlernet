@@ -54,15 +54,36 @@ namespace {
     }
 }
 
-absl::Status senec::query(const std::string &uri, const std::function<void(const SenecData &)> &handler) {
-    SenecClient client(uri);
-
-    auto st = client.Init();
-    if (!st.ok()) {
-        return st;
-    }
-
-    return client.Query(handler);
+senec::SenecClient::SenecClient(const std::string &base_url)
+: HttpConnection(base_url, "/lala.cgi", POST) {
+    request_body_["PV1"]["POWER_RATIO"] = json::value::string("");
+    request_body_["PM1OBJ1"]["P_TOTAL"] = json::value::string("");
+    request_body_["PM1OBJ1"]["FREQ"] = json::value::string("");
+    request_body_["PM1OBJ1"]["U_AC"] = json::value::string("");
+    request_body_["PM1OBJ1"]["I_AC"] = json::value::string("");
+    request_body_["PM1OBJ1"]["P_AC"] = json::value::string("");
+    request_body_["ENERGY"]["GUI_BAT_DATA_FUEL_CHARGE"] = json::value::string("");
+    request_body_["ENERGY"]["GUI_BAT_DATA_POWER"] = json::value::string("");
+    request_body_["ENERGY"]["GUI_BAT_DATA_VOLTAGE"] = json::value::string("");
+    request_body_["ENERGY"]["GUI_HOUSE_POW"] = json::value::string("");
+    request_body_["ENERGY"]["GUI_GRID_POW"] = json::value::string("");
+    request_body_["ENERGY"]["GUI_INVERTER_POWER"] = json::value::string("");
+    request_body_["ENERGY"]["STAT_STATE"] = json::value::string("");
+    request_body_["ENERGY"]["STAT_HOURS_OF_OPERATION"] = json::value::string("");
+    request_body_["BMS"]["NR_INSTALLED"] = json::value::string("");
+    request_body_["BMS"]["TOTAL_CURRENT"] = json::value::string("");
+    request_body_["STATISTIC"]["LIVE_GRID_IMPORT"] = json::value::string("");
+    request_body_["STATISTIC"]["LIVE_GRID_EXPORT"] = json::value::string("");
+    request_body_["STATISTIC"]["LIVE_HOUSE_CONS"] = json::value::string("");
+    request_body_["STATISTIC"]["LIVE_PV_GEN"] = json::value::string("");
+    request_body_["STATISTIC"]["CURRENT_STATE"] = json::value::string("");
+    request_body_["TEMPMEASURE"]["BATTERY_TEMP"] = json::value::string("");
+    request_body_["TEMPMEASURE"]["CASE_TEMP"] = json::value::string("");
+    request_body_["TEMPMEASURE"]["MCU_TEMP"] = json::value::string("");
+    request_body_["FAN_SPEED"]["INV_LV"] = json::value::string("");
+    request_body_["PV1"]["MPP_CUR"] = json::value::string("");
+    request_body_["PV1"]["MPP_VOL"] = json::value::string("");
+    request_body_["PV1"]["MPP_POWER"] = json::value::string("");    
 }
 
 absl::Status senec::SenecClient::Query(const std::function<void(const SenecData &)> &handler) {
@@ -145,35 +166,5 @@ web::http::client::http_client_config senec::SenecClient::ClientConfig() {
 }
 
 std::optional<web::json::value> senec::SenecClient::RequestBody() {
-    json::value request;
-    request["PV1"]["POWER_RATIO"] = json::value::string("");
-    request["PM1OBJ1"]["P_TOTAL"] = json::value::string("");
-    request["PM1OBJ1"]["FREQ"] = json::value::string("");
-    request["PM1OBJ1"]["U_AC"] = json::value::string("");
-    request["PM1OBJ1"]["I_AC"] = json::value::string("");
-    request["PM1OBJ1"]["P_AC"] = json::value::string("");
-    request["ENERGY"]["GUI_BAT_DATA_FUEL_CHARGE"] = json::value::string("");
-    request["ENERGY"]["GUI_BAT_DATA_POWER"] = json::value::string("");
-    request["ENERGY"]["GUI_BAT_DATA_VOLTAGE"] = json::value::string("");
-    request["ENERGY"]["GUI_HOUSE_POW"] = json::value::string("");
-    request["ENERGY"]["GUI_GRID_POW"] = json::value::string("");
-    request["ENERGY"]["GUI_INVERTER_POWER"] = json::value::string("");
-    request["ENERGY"]["STAT_STATE"] = json::value::string("");
-    request["ENERGY"]["STAT_HOURS_OF_OPERATION"] = json::value::string("");
-    request["BMS"]["NR_INSTALLED"] = json::value::string("");
-    request["BMS"]["TOTAL_CURRENT"] = json::value::string("");
-    request["STATISTIC"]["LIVE_GRID_IMPORT"] = json::value::string("");
-    request["STATISTIC"]["LIVE_GRID_EXPORT"] = json::value::string("");
-    request["STATISTIC"]["LIVE_HOUSE_CONS"] = json::value::string("");
-    request["STATISTIC"]["LIVE_PV_GEN"] = json::value::string("");
-    request["STATISTIC"]["CURRENT_STATE"] = json::value::string("");
-    request["TEMPMEASURE"]["BATTERY_TEMP"] = json::value::string("");
-    request["TEMPMEASURE"]["CASE_TEMP"] = json::value::string("");
-    request["TEMPMEASURE"]["MCU_TEMP"] = json::value::string("");
-    request["FAN_SPEED"]["INV_LV"] = json::value::string("");
-    request["PV1"]["MPP_CUR"] = json::value::string("");
-    request["PV1"]["MPP_VOL"] = json::value::string("");
-    request["PV1"]["MPP_POWER"] = json::value::string("");
-
-    return request;
+    return request_body_;
 }

@@ -53,18 +53,6 @@ namespace hafnertec {
         }
     }
 
-    absl::Status query(const std::string& uri, const std::string& user, const std::string& password,
-               const std::function<void(const HafnertecData &)> &handler) {
-        hafnertec::HafnertecClient client(uri, user, password);
-
-        auto st = client.Init();
-        if (!st.ok()) {
-            return st;
-        }
-
-        return client.Query(handler);
-    }
-
     absl::Status HafnertecClient::Query(const std::function<void(const HafnertecData &)> &handler) {
         return Execute([=](const http_response& response) {
             if (response.status_code() == status_codes::OK) {

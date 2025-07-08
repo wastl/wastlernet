@@ -13,6 +13,8 @@ namespace timescaledb {
     template<class Data>
     class TimescaleWriter {
     public:
+        virtual ~TimescaleWriter() = default;
+
         /*
          * Prepare a statement for later use.
          */
