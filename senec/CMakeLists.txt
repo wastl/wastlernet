@@ -12,3 +12,5 @@ ADD_LIBRARY(senec_client
         senec_timescaledb.cpp senec_timescaledb.h
         senec_module.cpp senec_module.h
         ${PROTO_HEADER} ${PROTO_SRC} )
+
+ADD_DEPENDENCIES(senec_client config)

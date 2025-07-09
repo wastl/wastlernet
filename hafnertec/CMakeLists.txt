@@ -12,3 +12,4 @@ ADD_LIBRARY(hafnertec_client hafnertec_client.cpp hafnertec_client.h ${PROTO_HEA
 
 add_executable(hafnertec_modbus_debug hafnertec_modbus_debug.cpp)
 target_link_libraries(hafnertec_modbus_debug PUBLIC pthread glog::glog absl_strings ${MODBUS_LIBRARY}  )
+ADD_DEPENDENCIES(hafnertec_client config)

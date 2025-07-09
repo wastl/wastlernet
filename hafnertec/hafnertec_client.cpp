@@ -80,22 +80,24 @@ namespace hafnertec {
 
                 handler(data);
 
-                wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_query_counter.Increment();
-
                 return absl::OkStatus();
             } else {
-                wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_error_counter.Increment();
                 LOGH(ERROR) << "Hafnertec controller query failed: " << response.reason_phrase();
                 return absl::InternalError(
                     absl::StrCat("Hafnertec controller query failed: ", response.reason_phrase()));
             }
         });
 
-        auto end_time = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = end_time - start_time;
-        wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_duration_ms.Observe(
-            std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+        if (st.ok()) {
+            wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_query_counter.Increment();
 
+            auto end_time = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration = end_time - start_time;
+            wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_duration_ms.Observe(
+                std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+        } else {
+            wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_error_counter.Increment();
+        }
         return st;
     }
 

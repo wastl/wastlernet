@@ -7,12 +7,12 @@
 wastlernet::metrics::WastlernetMetrics::WastlernetMetrics()
     : registry(std::make_shared<prometheus::Registry>()),
       total_queries_family(prometheus::BuildCounter()
-          .Name("wastlernet_queies_total")
-          .Help("Total number of queries to different services.")
+          .Name("wastlernet_queries_success")
+          .Help("Number of successful queries to different services.")
           .Register(*registry)),
       failed_queries_family(prometheus::BuildCounter()
           .Name("wastlernet_queries_failed")
-          .Help("Failed number of queries to different services.")
+          .Help("Number of failed queries to different services.")
           .Register(*registry)),
       query_duration_family(prometheus::BuildHistogram()
           .Name("wastlernet_query_duration")

@@ -96,15 +96,19 @@ absl::Status solvis::SolvisModule::Query(std::function<absl::Status(const solvis
 
             LOGS(INFO) << "running handler";
 
-            wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_query_counter.Increment();
-
             return handler(data);
         });
 
-        auto end_time = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = end_time - start_time;
-        wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_duration_ms.Observe(
-            std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+        if (st.ok()) {
+            wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_query_counter.Increment();
+
+            auto end_time = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration = end_time - start_time;
+            wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_duration_ms.Observe(
+                std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+        } else {
+            wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_error_counter.Increment();
+        }
 
         return st;
     } catch (std::exception const &e) {

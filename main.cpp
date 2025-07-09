@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
     auto senec_st = senec_client.Init();
     if(!senec_st.ok()) {
         LOG(ERROR) << "Could not initialize Senec module: " << senec_st;
-        return 1;
+        //return 1;
     }
     senec_client.Start();
 

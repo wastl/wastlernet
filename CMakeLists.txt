@@ -83,6 +83,7 @@ ADD_SUBDIRECTORY(fronius)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
+
 SET(ABSL_LIBRARIES absl::strings absl::status absl::statusor absl::str_format_internal absl::throw_delegate absl::hash absl::city
         absl::raw_hash_set absl::synchronization)
 SET(HTTP_SRC ../base/http_connection.h ../base/http_connection.cpp)
@@ -97,7 +98,7 @@ ADD_EXECUTABLE(wastlernet
 )
 TARGET_LINK_LIBRARIES(wastlernet
         config
-        hafnertec_client solvis_client senec_client weather_client fronius_client
+        hafnertec_client solvis_client senec_client weather_client #fronius_client
         cpprestsdk::cpprest Threads::Threads gumbo gumbo_query
         ${ABSL_LIBRARIES}
         pqxx

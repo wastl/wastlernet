@@ -8,6 +8,7 @@ PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HEADER hue.proto)
 
 add_compile_definitions(-DGLOG_USE_GLOG_EXPORT)
 ADD_LIBRARY(hue_client hue_client.cpp hue_client.h ${PROTO_HEADER} ${PROTO_SRC})
+ADD_DEPENDENCIES(hue_client config)
 
 
 
