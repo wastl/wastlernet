@@ -6,20 +6,23 @@
 
 namespace weather {
     absl::Status WeatherWriter::write(pqxx::work &tx, const WeatherData &data) {
-        tx.exec_prepared("weather_insert",
-                         data.uv(),
-                         data.barometer(),
-                         data.dailyrain(),
-                         data.dewpoint(),
-                         data.outdoor().temperature(),
-                         data.outdoor().humidity(),
-                         data.indoor().temperature(),
-                         data.indoor().humidity(),
-                         data.wind().direction(),
-                         data.wind().speed(),
-                         data.wind().gusts(),
-                         data.rain(),
-                         data.solarradiation()
+        tx.exec(
+            pqxx::prepped{"weather_insert"},
+            pqxx::params{
+                data.uv(),
+                data.barometer(),
+                data.dailyrain(),
+                data.dewpoint(),
+                data.outdoor().temperature(),
+                data.outdoor().humidity(),
+                data.indoor().temperature(),
+                data.indoor().humidity(),
+                data.wind().direction(),
+                data.wind().speed(),
+                data.wind().gusts(),
+                data.rain(),
+                data.solarradiation()
+            }
         );
         return absl::OkStatus();
     }

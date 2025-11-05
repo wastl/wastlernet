@@ -19,13 +19,16 @@ INSERT INTO hafnertec (
 }
 
 absl::Status hafnertec::HafnertecWriter::write(pqxx::work &tx, const HafnertecData &data) {
-    tx.exec_prepared("hafnertec_insert",
-                     data.temp_brennkammer(),
-                     data.temp_ruecklauf(),
-                     data.temp_vorlauf(),
-                     data.durchlauf(),
-                     data.ventilator(),
-                     data.anteil_heizung()
+    tx.exec(
+        pqxx::prepped{"hafnertec_insert"},
+        pqxx::params{
+            data.temp_brennkammer(),
+            data.temp_ruecklauf(),
+            data.temp_vorlauf(),
+            data.durchlauf(),
+            data.ventilator(),
+            data.anteil_heizung()
+        }
     );
     return absl::OkStatus();
 }

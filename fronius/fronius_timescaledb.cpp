@@ -65,47 +65,59 @@ INSERT INTO senec_ac (
 }
 
 absl::Status fronius::FroniusWriter::write(pqxx::work &tx, const fronius::FroniusData &data) {
-    tx.exec_prepared("senec_insert_main",
-                     data.leistung().hausverbrauch(),
-                     data.leistung().pv_leistung(),
-                     data.leistung().netz_leistung(),
-                     data.leistung().batterie_leistung(),
-                     data.quellen().einspeisung(),
-                     data.quellen().bezug(),
-                     data.quellen().laden(),
-                     data.quellen().entladen(),
-                     data.batterie().temperatur(),
-                     data.batterie().soc(),
-                     data.batterie().spannung(),
-                     data.gesamt().strom(),
-                     data.gesamt().einspeisung(),
-                     data.gesamt().bezug(),
-                     data.gesamt().verbrauch(),
-                     data.gesamt().produktion(),
-                     data.system().pv_begrenzung(),
-                     data.system().ac_leistung(),
-                     data.system().frequenz(),
-                     data.system().status(),
-                     data.system().betriebsstunden(),
-                     data.system().anzahl_batterien(),
-                     data.system().gehaeuse_temperatur(),
-                     data.system().mcu_temperatur(),
-                     data.system().fan_speed());
+    tx.exec(
+        pqxx::prepped{"senec_insert_main"},
+        pqxx::params{
+            data.leistung().hausverbrauch(),
+            data.leistung().pv_leistung(),
+            data.leistung().netz_leistung(),
+            data.leistung().batterie_leistung(),
+            data.quellen().einspeisung(),
+            data.quellen().bezug(),
+            data.quellen().laden(),
+            data.quellen().entladen(),
+            data.batterie().temperatur(),
+            data.batterie().soc(),
+            data.batterie().spannung(),
+            data.gesamt().strom(),
+            data.gesamt().einspeisung(),
+            data.gesamt().bezug(),
+            data.gesamt().verbrauch(),
+            data.gesamt().produktion(),
+            data.system().pv_begrenzung(),
+            data.system().ac_leistung(),
+            data.system().frequenz(),
+            data.system().status(),
+            data.system().betriebsstunden(),
+            data.system().anzahl_batterien(),
+            data.system().gehaeuse_temperatur(),
+            data.system().mcu_temperatur(),
+            data.system().fan_speed()
+        }
+    );
 
     for (int i=0; i<data.mppt_size(); i++) {
-        tx.exec_prepared("senec_insert_mppt",
-                         i,
-                         data.mppt(i).strom(),
-                         data.mppt(i).spannung(),
-                         data.mppt(i).leistung());
+        tx.exec(
+            pqxx::prepped{"senec_insert_mppt"},
+            pqxx::params{
+                i,
+                data.mppt(i).strom(),
+                data.mppt(i).spannung(),
+                data.mppt(i).leistung()
+            }
+        );
     }
 
     for (int i=0; i<data.mppt_size(); i++) {
-        tx.exec_prepared("senec_insert_ac",
-                         i,
-                         data.ac_data(i).strom(),
-                         data.ac_data(i).spannung(),
-                         data.ac_data(i).leistung());
+        tx.exec(
+            pqxx::prepped{"senec_insert_ac"},
+            pqxx::params{
+                i,
+                data.ac_data(i).strom(),
+                data.ac_data(i).spannung(),
+                data.ac_data(i).leistung()
+            }
+        );
     }
 
     return absl::OkStatus();
