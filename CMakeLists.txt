@@ -8,6 +8,7 @@ INCLUDE(FindGTest)
 INCLUDE(FindPostgreSQL)
 INCLUDE(FindGumbo)
 INCLUDE(FindOpenSSL)
+INCLUDE(BuildGlog)
 
 INCLUDE(GoogleTest)
 
@@ -15,14 +16,14 @@ INCLUDE(GoogleTest)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 find_package(gflags REQUIRED)
 
-find_package (glog 0.7.1 REQUIRED)
 add_compile_definitions(-DGLOG_USE_GLOG_EXPORT)
 if (TARGET glog::glog)
-    message(STATUS "glog library found successfully.")
+    message(STATUS "glog library available.")
 else()
-    message(FATAL_ERROR "Could not find glog library. Ensure it is available on your system.")
+    message(FATAL_ERROR "Could not obtain glog library (even after FetchContent).")
 endif()
 
 find_package(Protobuf REQUIRED)
