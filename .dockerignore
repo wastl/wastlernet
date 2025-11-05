@@ -1,0 +1,28 @@
+# Exclude local build artifacts and VCS data from the Docker build context
+cmake-build-*/
+.build/
+*.o
+*.obj
+*.pch
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Git & IDE
+.git/
+.gitignore
+.idea/
+.vscode/
+.clangd/
+.clang-format
+
+# CMake and cache
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Testing/
+
+# Local configs
+*.local
+.env
