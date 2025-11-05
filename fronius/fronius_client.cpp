@@ -21,6 +21,50 @@ namespace fronius {
     using namespace web::http::client; // HTTP client features
     using namespace web::json; // JSON library
 
+    // Small helpers to traverse cpprestsdk JSON more succinctly.
+    namespace {
+        inline utility::string_t s2t(const char* s) {
+            return utility::conversions::to_string_t(s);
+        }
+
+        // Walk a nested object path like {"Body","Data","Site"}. Returns nullptr if missing.
+        inline const value* json_getp(const value& root, std::initializer_list<const char*> path) {
+            const value* cur = &root;
+            for (const char* k : path) {
+                if (!cur->is_object()) return nullptr;
+                const auto key = s2t(k);
+                const auto& obj = cur->as_object();
+                auto it = obj.find(key);
+                if (it == obj.end()) return nullptr;
+                cur = &it->second;
+            }
+            return cur;
+        }
+
+        // Get a double field from an object; returns def if not present or not a number.
+        inline double json_get_double(const value& obj, const char* key, double def = 0.0) {
+            try {
+                if (!obj.is_object()) return def;
+                auto sk = s2t(key);
+                const auto& o = obj.as_object();
+                auto it = o.find(sk);
+                if (it == o.end()) return def;
+                const auto& v = it->second;
+                if (v.is_number()) return v.as_double();
+                // Some Fronius firmwares have numeric-ish strings; try conversion.
+                if (v.is_string()) {
+                    try {
+                        return std::stod(utility::conversions::to_utf8string(v.as_string()));
+                    } catch (...) {
+                        return def;
+                    }
+                }
+            } catch (...) {
+            }
+            return def;
+        }
+    } // namespace
+
     absl::Status FroniusPowerFlowClient::Query(const std::function<void(const Leistung&, const Quellen&)>& handler) {
         auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -32,41 +76,20 @@ namespace fronius {
 
             value result = response.extract_json(true).get();
 
-            // Expected structure: { "Body": { "Data": { "Site": {...}, "Inverters": {...}, "Storage": {...} } } }
-            auto bodyIt = result.as_object().find(U("Body"));
-            if (bodyIt == result.as_object().end()) {
-                LOGF(ERROR) << "Unexpected JSON: missing Body: " << result.serialize();
-                return absl::InternalError("Unexpected Fronius JSON (no Body)");
-            }
-            auto dataIt = bodyIt->second.as_object().find(U("Data"));
-            if (dataIt == bodyIt->second.as_object().end()) {
-                LOGF(ERROR) << "Unexpected JSON: missing Body.Data: " << result.serialize();
-                return absl::InternalError("Unexpected Fronius JSON (no Body.Data)");
-            }
-
-            const value& Data = dataIt->second;
-
-            if (!Data.has_field(U("Site"))) {
+            // Drill down to Body/Data/Site in a compact way.
+            const value* Site = json_getp(result, {"Body","Data","Site"});
+            if (!Site) {
                 LOGF(ERROR) << "Unexpected JSON: missing Body.Data.Site: " << result.serialize();
                 return absl::InternalError("Unexpected Fronius JSON (no Body.Data.Site)");
             }
 
             Leistung data;
 
-            const auto& Site = Data.at(U("Site"));
-            auto getd = [&](const char* k) -> double {
-                try {
-                    auto sk = utility::conversions::to_string_t(k);
-                    if (Site.has_field(sk))
-                        return Site.at(sk).as_double();
-                } catch (...) {
-                }
-                return 0.0;
-            };
-            double p_load = getd("P_Load"); // W, positive consumption
-            double p_pv = getd("P_PV"); // W, PV production
-            double p_grid = getd("P_Grid"); // W, positive import, negative export
-            double p_akku = getd("P_Akku"); // W, positive discharge, negative charge
+            // Extract doubles with sensible defaults (0.0 if missing)
+            double p_load = json_get_double(*Site, "P_Load"); // W, positive consumption
+            double p_pv = json_get_double(*Site, "P_PV"); // W, PV production
+            double p_grid = json_get_double(*Site, "P_Grid"); // W, positive import, negative export
+            double p_akku = json_get_double(*Site, "P_Akku"); // W, positive discharge, negative charge
 
             data.set_hausverbrauch(-p_load);
             data.set_pv_leistung(p_pv);
@@ -118,48 +141,19 @@ namespace fronius {
 
             value result = response.extract_json(true).get();
 
-            // Expected structure: { "Body": { "Data": { "Site": {...}, "Inverters": {...}, "Storage": {...} } } }
-            auto bodyIt = result.as_object().find(U("Body"));
-            if (bodyIt == result.as_object().end()) {
-                LOGF(ERROR) << "Unexpected JSON: missing Body: " << result.serialize();
-                return absl::InternalError("Unexpected Fronius JSON (no Body)");
-            }
-            auto dataIt = bodyIt->second.as_object().find(U("Data"));
-            if (dataIt == bodyIt->second.as_object().end()) {
-                LOGF(ERROR) << "Unexpected JSON: missing Body.Data: " << result.serialize();
-                return absl::InternalError("Unexpected Fronius JSON (no Body.Data)");
-            }
-
-            auto zeroIt = dataIt->second.as_object().find(U("0"));
-            if (zeroIt == dataIt->second.as_object().end()) {
-                LOGF(ERROR) << "Unexpected JSON: missing Body.Data.0: " << result.serialize();
-                return absl::InternalError("Unexpected Fronius JSON (no Body.Data.0)");
-            }
-
-
-            const value& Data = zeroIt->second;
-
-            if (!Data.has_field(U("Controller"))) {
-                LOGF(ERROR) << "Unexpected JSON: missing Body.Data.Site.0.Controller: " << result.serialize();
+            // Body/Data/0/Controller
+            const value* Controller = json_getp(result, {"Body","Data","0","Controller"});
+            if (!Controller) {
+                LOGF(ERROR) << "Unexpected JSON: missing Body.Data.0.Controller: " << result.serialize();
                 return absl::InternalError("Unexpected Fronius JSON (no Body.Data.0.Controller)");
             }
 
             Batterie data;
 
-            const auto& controller = Data.at(U("Controller"));
-            auto getd = [&](const char* k) -> double {
-                try {
-                    auto sk = utility::conversions::to_string_t(k);
-                    if (controller.has_field(sk))
-                        return controller.at(sk).as_double();
-                } catch (...) {
-                }
-                return 0.0;
-            };
-            double p_soc = getd("StateOfCharge_Relative"); // %
-            double p_current_dc = getd("Current_DC"); // A
-            double p_temp = getd("Temperature_Cell"); // °C
-            double p_voltage_dc = getd("Voltage_DC"); // V
+            double p_soc = json_get_double(*Controller, "StateOfCharge_Relative"); // %
+            double p_current_dc = json_get_double(*Controller, "Current_DC"); // A
+            double p_temp = json_get_double(*Controller, "Temperature_Cell"); // °C
+            double p_voltage_dc = json_get_double(*Controller, "Voltage_DC"); // V
 
             data.set_soc(p_soc);
             data.set_spannung(p_voltage_dc);

@@ -15,6 +15,7 @@
 #include <prometheus/exposer.h>
 
 #include "base/metrics.h"
+#include "base/utility.h"
 #include "config/config.pb.h"
 
 #include "hafnertec/hafnertec_module.h"
