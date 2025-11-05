@@ -95,30 +95,5 @@ absl::Status fronius::FroniusWriter::write(pqxx::work &tx, const fronius::Froniu
             data.system().fan_speed()
         }
     );
-
-    for (int i=0; i<data.mppt_size(); i++) {
-        tx.exec(
-            pqxx::prepped{"senec_insert_mppt"},
-            pqxx::params{
-                i,
-                data.mppt(i).strom(),
-                data.mppt(i).spannung(),
-                data.mppt(i).leistung()
-            }
-        );
-    }
-
-    for (int i=0; i<data.mppt_size(); i++) {
-        tx.exec(
-            pqxx::prepped{"senec_insert_ac"},
-            pqxx::params{
-                i,
-                data.ac_data(i).strom(),
-                data.ac_data(i).spannung(),
-                data.ac_data(i).leistung()
-            }
-        );
-    }
-
     return absl::OkStatus();
 }

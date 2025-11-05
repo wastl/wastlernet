@@ -51,9 +51,10 @@ absl::Status wastlernet::ModbusConnection::Execute(std::function<absl::Status(mo
         return absl::FailedPreconditionError("Modbus connection not initialized");
     }
 
-    absl::MutexLock lock(&mutex_);
 
     auto st = Reinit();
+
+    absl::MutexLock lock(&mutex_);
     if (!st.ok()) {
         return st;
     }
