@@ -10,6 +10,7 @@ INCLUDE(FindGumbo)
 INCLUDE(FindOpenSSL)
 INCLUDE(BuildGlog)
 INCLUDE(BuildGumboQuery)
+INCLUDE(BuildHueplusplus)
 
 INCLUDE(GoogleTest)
 
@@ -37,8 +38,6 @@ endif()
 find_library(MODBUS_LIBRARY NAMES libmodbus modbus)
 find_library(PQXX_LIBRARY NAMES libpqxx pqxx)
 
-find_package(hueplusplus REQUIRED)
-find_library(HUE_LIBRARY NAMES hueplusplusshared hueplusplusstatic)
 
 find_package(absl REQUIRED)
 

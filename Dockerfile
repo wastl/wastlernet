@@ -4,6 +4,8 @@ FROM debian:trixie
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN apt-get update && apt-get install -y --no-install-recommends auto-apt-proxy
+
 # Install build and runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -18,7 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libmodbus-dev \
     libcpprest-dev \
     prometheus-cpp-dev \
-    libhueplusplus-dev \
+    nlohmann-json3-dev \
+    python3 \
+    libmbedtls-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user for safety
