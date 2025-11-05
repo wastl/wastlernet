@@ -16,6 +16,6 @@ ADD_LIBRARY(senec_client
         senec_module.cpp senec_module.h
         ${PROTO_HEADER} ${PROTO_SRC} )
 
-target_link_libraries(senec_client PUBLIC glog::glog)
+target_link_libraries(senec_client PUBLIC glog::glog pqxx ${PostgreSQL_LIBRARIES})
 
 ADD_DEPENDENCIES(senec_client config)

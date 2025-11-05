@@ -175,7 +175,7 @@ TEST_F(ModbusTest, ReadRegisters) {
 
         if (rc == -1) {
             LOG(ERROR) << "Error reading register: " << modbus_strerror(errno);
-            return absl::InternalError(absl::StrCat("Error reading register: ", modbus_strerror(errno)));
+            return absl::InternalError(std::string("Error reading register: ") + modbus_strerror(errno));
         }
 
         std::cout << "Register values:" << std::endl;
@@ -203,14 +203,14 @@ TEST_F(ModbusTest, WriteRegisters) {
 
         if (rc == -1) {
             LOG(ERROR) << "Error writing register: " << modbus_strerror(errno);
-            return absl::InternalError(absl::StrCat("Error writing register: ", modbus_strerror(errno)));
+            return absl::InternalError(std::string("Error writing register: ") + modbus_strerror(errno));
         }
 
         uint16_t read_back_value;
         rc = modbus_read_registers(ctx, addr, 1, &read_back_value);
         if (rc == -1) {
             LOG(ERROR) << "Error reading register: " << modbus_strerror(errno);
-            return absl::InternalError(absl::StrCat("Error reading register: ", modbus_strerror(errno)));
+            return absl::InternalError(std::string("Error reading register: ") + modbus_strerror(errno));
         }
 
         EXPECT_EQ(read_back_value, value);

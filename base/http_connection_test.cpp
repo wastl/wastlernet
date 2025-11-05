@@ -63,7 +63,7 @@ private:
                 } else {
                     // everything else should return NOT FOUND
                     request.reply(web::http::status_codes::NotFound,
-                                  absl::StrCat("data for module \"", path, "\" not found"), "text/plain").get();
+                                  std::string("data for module \"") + path + "\" not found", "text/plain").get();
                 }
             } catch (const std::exception &e) {
                 LOG(ERROR) << "Error while resolving REST request: " << e.what();
