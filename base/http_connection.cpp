@@ -5,7 +5,8 @@
 #include "http_connection.h"
 
 #include <glog/logging.h>
-#include <json/json.hpp>
+#include <absl/strings/str_cat.h>
+#include <optional>
 
 #define LOGS(level) LOG(level) << "[" << Name() << "] "
 

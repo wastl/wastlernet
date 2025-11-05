@@ -16,4 +16,6 @@ ADD_LIBRARY(senec_client
         senec_module.cpp senec_module.h
         ${PROTO_HEADER} ${PROTO_SRC} )
 
+target_link_libraries(senec_client PUBLIC glog::glog)
+
 ADD_DEPENDENCIES(senec_client config)

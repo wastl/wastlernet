@@ -9,6 +9,7 @@ INCLUDE(FindPostgreSQL)
 INCLUDE(FindGumbo)
 INCLUDE(FindOpenSSL)
 INCLUDE(BuildGlog)
+INCLUDE(BuildGumboQuery)
 
 INCLUDE(GoogleTest)
 
