@@ -133,6 +133,7 @@ int main(int argc, char *argv[]) {
     prometheus::Exposer exposer{prometheus_address};
     exposer.RegisterCollectable(wastlernet::metrics::WastlernetMetrics::GetInstance().registry);
 
+    LOG(INFO) << "Started Prometheus exporter on " << prometheus_address << std::endl;
 
     wastlernet::StateCache current_state;
     std::vector<std::unique_ptr<wastlernet::IModule>> modules;
