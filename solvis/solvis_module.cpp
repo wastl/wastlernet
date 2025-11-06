@@ -32,18 +32,15 @@ absl::Status solvis::SolvisModule::Query(std::function<absl::Status(const solvis
             int rc3 = modbus_read_registers(ctx, 33280, 20, &tab_reg[32]);
 
             if (rc1 == -1 || rc2 == -1 || rc3 == -1) {
-                wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_error_counter.Increment();
                 LOGS(ERROR) << "Error reading register: " << modbus_strerror(errno);
                 return absl::InternalError(absl::StrCat("Error reading register: ", modbus_strerror(errno)));
             }
 
             if (rc1 < 17) {
-                wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_error_counter.Increment();
                 LOGS(ERROR) << "Could not retrieve all registers" << std::endl;
                 return absl::InternalError("Could not retrieve all registers");
             }
             if (rc2 < 5) {
-                wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_error_counter.Increment();
                 LOGS(ERROR) << "Could not retrieve all registers" << std::endl;
                 return absl::InternalError("Could not retrieve all registers");
             }
@@ -99,21 +96,15 @@ absl::Status solvis::SolvisModule::Query(std::function<absl::Status(const solvis
             return handler(data);
         });
 
-        if (st.ok()) {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_query_counter.Increment();
-
-            auto end_time = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> duration = end_time - start_time;
-            wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_duration_ms.Observe(
-                std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
-        } else {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_error_counter.Increment();
-        }
+        auto end_time = std::chrono::high_resolution_clock::now();
+        const double seconds = std::chrono::duration<double>(end_time - start_time).count();
+        wastlernet::metrics::WastlernetMetrics::GetInstance().ObserveQueryLatency("solvis", seconds);
+        wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("solvis", st.ok());
 
         return st;
     } catch (std::exception const &e) {
         LOG(ERROR) << "Error querying Solvis controller: " << e.what();
-        wastlernet::metrics::WastlernetMetrics::GetInstance().solvis_error_counter.Increment();
+        wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("solvis", false);
         return absl::InternalError(e.what());
     }
 }

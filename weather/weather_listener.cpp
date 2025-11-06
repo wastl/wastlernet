@@ -65,12 +65,12 @@ namespace weather {
 
                 LOGW(INFO) << "returning HTTP response";
 
-                wastlernet::metrics::WastlernetMetrics::GetInstance().weather_query_counter.Increment();
+                wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("weather", true);
 
                 request.reply(web::http::status_codes::OK).get();
             } catch(const std::exception &e) {
                 LOGW(ERROR) << "Error while updating data: " << e.what();
-                wastlernet::metrics::WastlernetMetrics::GetInstance().weather_error_counter.Increment();
+                wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("weather", false);
                 request.reply(web::http::status_codes::InternalError);
             }
         });

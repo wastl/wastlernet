@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
         prometheus_address = "127.0.0.1:32154";
     }
     prometheus::Exposer exposer{prometheus_address};
-    exposer.RegisterCollectable(wastlernet::metrics::WastlernetMetrics::GetInstance().registry);
+    exposer.RegisterCollectable(wastlernet::metrics::WastlernetMetrics::GetInstance().registry());
 
     LOG(INFO) << "Started Prometheus exporter on " << prometheus_address;
 

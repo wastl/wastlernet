@@ -88,15 +88,11 @@ namespace hafnertec {
             }
         });
 
-        if (st.ok()) {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_query_counter.Increment();
-
+        {
             auto end_time = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> duration = end_time - start_time;
-            wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_duration_ms.Observe(
-                std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
-        } else {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().hafnertec_error_counter.Increment();
+            const double seconds = std::chrono::duration<double>(end_time - start_time).count();
+            wastlernet::metrics::WastlernetMetrics::GetInstance().ObserveQueryLatency("hafnertec", seconds);
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("hafnertec", st.ok());
         }
         return st;
     }

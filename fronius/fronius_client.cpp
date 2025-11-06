@@ -119,14 +119,11 @@ namespace fronius {
             return absl::OkStatus();
         });
 
-        if (st.ok()) {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_query_counter.Increment();
+        {
             auto end_time = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> duration = end_time - start_time;
-            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_duration_ms.Observe(
-                std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
-        } else {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_error_counter.Increment();
+            const double seconds = std::chrono::duration<double>(end_time - start_time).count();
+            wastlernet::metrics::WastlernetMetrics::GetInstance().ObserveQueryLatency("fronius", seconds);
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("fronius", st.ok());
         }
 
         return st;
@@ -166,14 +163,11 @@ namespace fronius {
             return absl::OkStatus();
         });
 
-        if (st.ok()) {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_query_counter.Increment();
+        {
             auto end_time = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> duration = end_time - start_time;
-            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_duration_ms.Observe(
-                std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
-        } else {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_error_counter.Increment();
+            const double seconds = std::chrono::duration<double>(end_time - start_time).count();
+            wastlernet::metrics::WastlernetMetrics::GetInstance().ObserveQueryLatency("fronius", seconds);
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("fronius", st.ok());
         }
 
         return st;
@@ -217,14 +211,11 @@ namespace fronius {
             return absl::OkStatus();
         });
 
-        if (st.ok()) {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_query_counter.Increment();
+        {
             auto end_time = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> duration = end_time - start_time;
-            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_duration_ms.Observe(
-                std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
-        } else {
-            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_error_counter.Increment();
+            const double seconds = std::chrono::duration<double>(end_time - start_time).count();
+            wastlernet::metrics::WastlernetMetrics::GetInstance().ObserveQueryLatency("fronius", seconds);
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("fronius", st.ok());
         }
 
         return st;
@@ -363,14 +354,11 @@ absl::Status FroniusClient::Query(const std::function<void(const FroniusData &)>
         return absl::OkStatus();
     });
 
-    if (st.ok()) {
-        wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_query_counter.Increment();
+    {
         auto end_time = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = end_time - start_time;
-        wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_duration_ms.Observe(
-            std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
-    } else {
-        wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_error_counter.Increment();
+        const double seconds = std::chrono::duration<double>(end_time - start_time).count();
+        wastlernet::metrics::WastlernetMetrics::GetInstance().ObserveQueryLatency("fronius", seconds);
+        wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("fronius", st.ok());
     }
 
     return st;
