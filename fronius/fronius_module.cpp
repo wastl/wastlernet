@@ -61,8 +61,10 @@ absl::Status FroniusModule::Query(std::function<absl::Status(const fronius::Fron
 }
 
 absl::Status FroniusModule::Init() {
-    RETURN_IF_ERROR(PollingModule<FroniusData>::Init());
+    RETURN_IF_ERROR(PollingModule::Init());
     RETURN_IF_ERROR(pf_client_.Init());
+    RETURN_IF_ERROR(slave_client_.Init());
+    RETURN_IF_ERROR(energy_client_.Init());
     RETURN_IF_ERROR(battery_client_.Init());
     return absl::OkStatus();
 }
