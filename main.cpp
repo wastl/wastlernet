@@ -8,13 +8,17 @@
 #include <fcntl.h>
 #include <absl/strings/str_split.h>
 #include <absl/strings/strip.h>
+#include <absl/strings/str_cat.h>
 #include <absl/status/status.h>
 #include <absl/status/statusor.h>
 #include <cpprest/http_listener.h>
 #include <prometheus/exposer.h>
 
 #include "base/metrics.h"
+#include "base/utility.h"
 #include "config/config.pb.h"
+#include "fronius/fronius_client.h"
+#include "fronius/fronius_module.h"
 
 #include "hafnertec/hafnertec_module.h"
 #include "senec/senec_module.h"
@@ -131,74 +135,96 @@ int main(int argc, char *argv[]) {
 
 
     wastlernet::StateCache current_state;
+    std::vector<std::unique_ptr<wastlernet::IModule>> modules;
 
-    solvis::SolvisModbusConnection solvis_connection(config.solvis());
-    auto solvis_st = solvis_connection.Init();
-    if (!solvis_st.ok()) {
-        LOG(ERROR) << "Could not initialize Solvis connection: " << solvis_st;
-        return 1;
+    std::unique_ptr<solvis::SolvisModbusConnection> solvis_connection;
+    if (config.has_solvis()) {
+        solvis_connection = std::make_unique<solvis::SolvisModbusConnection>(config.solvis());
+        auto solvis_st = solvis_connection->Init();
+        if (!solvis_st.ok()) {
+            LOG(ERROR) << "Could not initialize Solvis connection: " << solvis_st;
+            return 1;
+        }
+
+        auto solvis_client = std::make_unique<solvis::SolvisModule>(config.timescaledb(),config.solvis(), solvis_connection.get(), &current_state);
+        solvis_st = solvis_client->Init();
+        if (!solvis_st.ok()) {
+            LOG(ERROR) << "Could not initialize Solvis module: " << solvis_st;
+            return 1;
+        }
+        solvis_client->Start();
+        modules.emplace_back(std::move(solvis_client));
+
+        LOG(INFO) << "Started Solvis module." << std::endl;
+
+        solvis::SolvisUpdater solvis_updater(config.solvis(), solvis_connection.get(), &current_state);
+        auto su_st = solvis_updater.Init();
+        if(!su_st.ok()) {
+            LOG(ERROR) << "Could not initialize Solvis updater: " << su_st;
+            return 1;
+        }
+        solvis_updater.Start();
+
+        LOG(INFO) << "Started Solvis updater." << std::endl;
     }
 
+    if (config.has_hafnertec()) {
+        auto hafnertec_client = std::make_unique<hafnertec::HafnertecModule>(config.timescaledb(), config.hafnertec(), &current_state);
+        auto hafnertec_st = hafnertec_client->Init();
+        if(!hafnertec_st.ok()) {
+            LOG(ERROR) << "Could not initialize Hafnertec module: " << hafnertec_st;
+            return 1;
+        }
+        hafnertec_client->Start();
+        modules.emplace_back(std::move(hafnertec_client));
 
-    solvis::SolvisModule solvis_client(config.timescaledb(),config.solvis(), &solvis_connection, &current_state);
-    solvis_st = solvis_client.Init();
-    if (!solvis_st.ok()) {
-        LOG(ERROR) << "Could not initialize Solvis module: " << solvis_st;
-        return 1;
+        LOG(INFO) << "Started Hafnertec module." << std::endl;
     }
-    solvis_client.Start();
 
-    LOG(INFO) << "Started Solvis module." << std::endl;
+    if (config.has_senec()) {
+        auto senec_client = std::make_unique<senec::SenecModule>(config.timescaledb(), config.senec(), &current_state);
+        auto senec_st = senec_client->Init();
+        if(!senec_st.ok()) {
+            LOG(ERROR) << "Could not initialize Senec module: " << senec_st;
+            return 1;
+        }
+        senec_client->Start();
+        modules.emplace_back(std::move(senec_client));
 
-    hafnertec::HafnertecModule hafnertec_client(config.timescaledb(), config.hafnertec(), &current_state);
-    auto hafnertec_st = hafnertec_client.Init();
-    if(!hafnertec_st.ok()) {
-        LOG(ERROR) << "Could not initialize Hafnertec module: " << hafnertec_st;
-        return 1;
+        LOG(INFO) << "Started Fronius module." << std::endl;
     }
-    hafnertec_client.Start();
 
-    LOG(INFO) << "Started Hafnertec module." << std::endl;
+    if (config.has_fronius()) {
+        auto fronius_client = std::make_unique<fronius::FroniusModule>(config.timescaledb(), config.fronius(), &current_state);
+        auto fronius_st = fronius_client->Init();
+        if(!fronius_st.ok()) {
+            LOG(ERROR) << "Could not initialize Fronius module: " << fronius_st;
+            return 1;
+        }
+        fronius_client->Start();
+        modules.emplace_back(std::move(fronius_client));
 
-    senec::SenecModule senec_client(config.timescaledb(), config.senec(), &current_state);
-    auto senec_st = senec_client.Init();
-    if(!senec_st.ok()) {
-        LOG(ERROR) << "Could not initialize Senec module: " << senec_st;
-        //return 1;
+        LOG(INFO) << "Started Fronius module." << std::endl;
     }
-    senec_client.Start();
 
-    LOG(INFO) << "Started Senec module." << std::endl;
+    if (config.has_weather()) {
+        auto weather_client = std::make_unique<weather::WeatherModule>(config.timescaledb(), config.weather(), &current_state);
+        auto weather_st = weather_client->Init();
+        if(!weather_st.ok()) {
+            LOG(ERROR) << "Could not initialize Weather module: " << weather_st;
+            return 1;
+        }
+        weather_client->Start();
+        modules.emplace_back(std::move(weather_client));
 
-    weather::WeatherModule weather_client(config.timescaledb(), config.weather(), &current_state);
-    auto weather_st = weather_client.Init();
-    if(!weather_st.ok()) {
-        LOG(ERROR) << "Could not initialize Weather module: " << weather_st;
-        return 1;
+        LOG(INFO) << "Started Weather module." << std::endl;
     }
-    weather_client.Start();
-
-    LOG(INFO) << "Started Weather module." << std::endl;
-
-    /*
-    solvis::SolvisUpdater solvis_updater(config.solvis(), &solvis_connection, &current_state);
-    auto su_st = solvis_updater.Init();
-    if(!su_st.ok()) {
-        LOG(ERROR) << "Could not initialize Solvis updater: " << su_st;
-        return 1;
-    }
-    solvis_updater.Start();
-
-    LOG(INFO) << "Started Solvis updater." << std::endl;
-    */
 
     auto rest_listener = wastlernet::rest::start_listener(config.rest().listen(), &current_state);
 
     LOG(INFO) << "Smart Home Controller startup sequence completed.";
 
-    solvis_client.Wait();
-    hafnertec_client.Wait();
-    senec_client.Wait();
-    weather_client.Wait();
-    //solvis_updater.Wait();
+    for (auto &module : modules) {
+        module->Wait();
+    }
 }

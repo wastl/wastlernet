@@ -7,6 +7,7 @@
 #include <absl/synchronization/mutex.h>
 #include <modbus/modbus.h>
 #include <modbus/modbus-tcp.h>
+#include <functional>
 
 #ifndef WASTLERNET_MODBUS_CONNECTION_H
 #define WASTLERNET_MODBUS_CONNECTION_H

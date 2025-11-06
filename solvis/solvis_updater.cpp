@@ -7,6 +7,7 @@
 
 #include "weather/weather.pb.h"
 #include <glog/logging.h>
+#include <absl/strings/str_cat.h>
 #include <modbus/modbus.h>
 #include <modbus/modbus-tcp.h>
 

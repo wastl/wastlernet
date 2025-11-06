@@ -1,6 +1,10 @@
 INCLUDE(FindProtobuf)
 FIND_PACKAGE(Protobuf REQUIRED)
-FIND_PACKAGE (glog 0.7.1 REQUIRED)
+
+# glog is provided at the root via FetchContent (v0.7.1)
+if (NOT TARGET glog::glog)
+    message(FATAL_ERROR "glog::glog target not available. Ensure the root CMakeLists fetches glog 0.7.1.")
+endif()
 INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/..)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/..)
