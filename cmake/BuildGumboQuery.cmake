@@ -62,14 +62,29 @@ endif()
 target_include_directories(gumbo_query PUBLIC "${GUMBO_QUERY_SYNTH_INC_ROOT}")
 
 # gumbo-query depends on gumbo (C Gumbo HTML5 parser). Make sure it's found and linked.
-# The root CMake includes FindGumbo.cmake which defines target `gumbo` via variables.
-# We attempt to link against a `gumbo` target if available, otherwise use the variable.
+# The root CMake includes FindGumbo.cmake which defines variables for shared and static libs.
+# Prefer linking the shared library to avoid pulling in a non-PIC static archive inside our shared libs.
 if (TARGET gumbo)
     target_link_libraries(gumbo_query PUBLIC gumbo)
 else()
-    # Try to use variables provided by FindGumbo.cmake
-    if (DEFINED Gumbo_LIBRARIES)
-        target_link_libraries(gumbo_query PUBLIC ${Gumbo_LIBRARIES})
+    # Prefer the shared library if available
+    if (DEFINED Gumbo_LIBRARY)
+        target_link_libraries(gumbo_query PUBLIC ${Gumbo_LIBRARY})
+    elseif(DEFINED Gumbo_LIBRARIES)
+        # Fallback: some Find modules expose a list; try to pick the shared one if present
+        foreach(lib ${Gumbo_LIBRARIES})
+            if(lib MATCHES "\\.so$" OR lib MATCHES "\\.dylib$" OR lib STREQUAL gumbo)
+                set(_gumbo_candidate ${lib})
+                break()
+            endif()
+        endforeach()
+        if (DEFINED _gumbo_candidate)
+            target_link_libraries(gumbo_query PUBLIC ${_gumbo_candidate})
+        else()
+            # As a last resort, link the first entry (but note this may fail if it's a static non-PIC archive)
+            list(GET Gumbo_LIBRARIES 0 _gumbo_first)
+            target_link_libraries(gumbo_query PUBLIC ${_gumbo_first})
+        endif()
     else()
         message(FATAL_ERROR "Gumbo (HTML5 parser) not found. Ensure FindGumbo.cmake finds it or install libgumbo.")
     endif()
