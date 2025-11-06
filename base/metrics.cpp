@@ -21,23 +21,37 @@ wastlernet::metrics::WastlernetMetrics::WastlernetMetrics()
       solvis_query_counter(total_queries_family.Add({{"service", "solvis"}})),
       solvis_error_counter(failed_queries_family.Add({{"service", "solvis"}})),
       solvis_duration_ms(query_duration_family.Add({{"service", "solvis"}},
-          prometheus::Histogram::BucketBoundaries{1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0, 2500.0, 5000.0, 10000.0})),
+                                                   prometheus::Histogram::BucketBoundaries{
+                                                       1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0, 2500.0,
+                                                       5000.0, 10000.0
+                                                   })),
       senec_query_counter(total_queries_family.Add({{"service", "senec"}})),
       senec_error_counter(failed_queries_family.Add({{"service", "senec"}})),
       senec_duration_ms(query_duration_family.Add({{"service", "senec"}},
-          prometheus::Histogram::BucketBoundaries{1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0, 2500.0, 5000.0, 10000.0})),
-      hafnertec_query_counter(total_queries_family.Add( {{"service", "hafnertec"}})),
+                                                  prometheus::Histogram::BucketBoundaries{
+                                                      1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0, 2500.0,
+                                                      5000.0, 10000.0
+                                                  })),
+      hafnertec_query_counter(total_queries_family.Add({{"service", "hafnertec"}})),
       hafnertec_error_counter(failed_queries_family.Add({{"service", "hafnertec"}})),
       hafnertec_duration_ms(query_duration_family.Add({{"service", "hafnertec"}},
-          prometheus::Histogram::BucketBoundaries{1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0, 2500.0, 5000.0, 10000.0})),
+                                                      prometheus::Histogram::BucketBoundaries{
+                                                          1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0,
+                                                          2500.0, 5000.0, 10000.0
+                                                      })),
       fronius_query_counter(total_queries_family.Add({{"service", "fronius"}})),
       fronius_error_counter(failed_queries_family.Add({{"service", "fronius"}})),
       fronius_duration_ms(query_duration_family.Add({{"service", "fronius"}},
-          prometheus::Histogram::BucketBoundaries{1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0, 2500.0, 5000.0, 10000.0})) {
+                                                    prometheus::Histogram::BucketBoundaries{
+                                                        1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0, 2500.0,
+                                                        5000.0, 10000.0
+                                                    })),
+      weather_query_counter(total_queries_family.Add({{"service", "weather"}})),
+      weather_error_counter(failed_queries_family.Add({{"service", "weather"}})) {
     prometheus::BuildCounter()
-        .Name("wastlernet_app_starts_total")
-        .Help("Total application starts.")
-        .Register(*registry)
-        .Add({{"app", "wastlernet"}})
-        .Increment();
+            .Name("wastlernet_app_starts_total")
+            .Help("Total application starts.")
+            .Register(*registry)
+            .Add({{"app", "wastlernet"}})
+            .Increment();
 }

@@ -41,6 +41,10 @@ public:
     prometheus::Counter& fronius_error_counter;
     prometheus::Histogram& fronius_duration_ms;
 
+    prometheus::Counter& weather_query_counter;
+    prometheus::Counter& weather_error_counter;
+
+
 private:
     // Private constructor to enforce singleton pattern
     WastlernetMetrics();

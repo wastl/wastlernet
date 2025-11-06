@@ -34,3 +34,7 @@ timescaledb {
 rest {
   listen: "http://192.168.178.2:41000/"
 }
+
+prometheus {
+  listen: "127.0.0.1:32154"
+}

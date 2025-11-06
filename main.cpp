@@ -102,8 +102,6 @@ int main(int argc, char *argv[]) {
     google::InitGoogleLogging(argv[0]);
     google::EnableLogCleaner(24h * 3);
 
-    prometheus::Exposer exposer{"127.0.0.1:32154"};
-    exposer.RegisterCollectable(wastlernet::metrics::WastlernetMetrics::GetInstance().registry);
 
     wastlernet::Config config;
 
@@ -121,6 +119,16 @@ int main(int argc, char *argv[]) {
     close(fd);
 
     LOG(INFO) << "Loaded configuration." << std::endl;
+
+    std::string prometheus_address;
+    if (config.has_prometheus() && config.prometheus().has_listen()) {
+        prometheus_address = config.prometheus().listen();
+    } else {
+        prometheus_address = "127.0.0.1:32154";
+    }
+    prometheus::Exposer exposer{prometheus_address};
+    exposer.RegisterCollectable(wastlernet::metrics::WastlernetMetrics::GetInstance().registry);
+
 
     wastlernet::StateCache current_state;
 
@@ -172,6 +180,7 @@ int main(int argc, char *argv[]) {
 
     LOG(INFO) << "Started Weather module." << std::endl;
 
+    /*
     solvis::SolvisUpdater solvis_updater(config.solvis(), &solvis_connection, &current_state);
     auto su_st = solvis_updater.Init();
     if(!su_st.ok()) {
@@ -181,6 +190,7 @@ int main(int argc, char *argv[]) {
     solvis_updater.Start();
 
     LOG(INFO) << "Started Solvis updater." << std::endl;
+    */
 
     auto rest_listener = wastlernet::rest::start_listener(config.rest().listen(), &current_state);
 
@@ -190,5 +200,5 @@ int main(int argc, char *argv[]) {
     hafnertec_client.Wait();
     senec_client.Wait();
     weather_client.Wait();
-    solvis_updater.Wait();
+    //solvis_updater.Wait();
 }

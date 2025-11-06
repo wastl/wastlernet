@@ -9,6 +9,8 @@
 
 #include "weather_listener.h"
 
+#include "base/metrics.h"
+
 namespace {
     double fahrenheit2celsius(double fahrenheit) {
         return 5 * (fahrenheit - 32) / 9;
@@ -63,9 +65,12 @@ namespace weather {
 
                 LOGW(INFO) << "returning HTTP response";
 
+                wastlernet::metrics::WastlernetMetrics::GetInstance().weather_query_counter.Increment();
+
                 request.reply(web::http::status_codes::OK).get();
             } catch(const std::exception &e) {
                 LOGW(ERROR) << "Error while updating data: " << e.what();
+                wastlernet::metrics::WastlernetMetrics::GetInstance().weather_error_counter.Increment();
                 request.reply(web::http::status_codes::InternalError);
             }
         });
