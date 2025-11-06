@@ -18,11 +18,39 @@ absl::Status FroniusModule::Query(std::function<absl::Status(const fronius::Fron
 
         RETURN_IF_ERROR(pf_client_.Query([&](const Leistung &l, const Quellen &q) {
             *data.mutable_leistung() = l;
-            *data.mutable_quellen() = q;
+        }));
+        RETURN_IF_ERROR(slave_client_.Query([&](const Leistung &l, const Quellen &q) {
+            data.mutable_leistung()->set_pv_leistung(data.leistung().pv_leistung() + l.pv_leistung());
+        }));
+        RETURN_IF_ERROR(energy_client_.Query([&](double consumption) {
+            data.mutable_leistung()->set_hausverbrauch(consumption);
         }));
         RETURN_IF_ERROR(battery_client_.Query([&](const Batterie &b) {
             *data.mutable_batterie() = b;
         }));
+
+        // Fix up consumption
+        double consumption = data.leistung().pv_leistung()+data.leistung().batterie_leistung()+data.leistung().netz_leistung();
+        data.mutable_leistung()->set_hausverbrauch(consumption);
+
+        // Fix up sources
+        Quellen quellen;
+        if (data.leistung().batterie_leistung() > 0) {
+            quellen.set_laden(0);
+            quellen.set_entladen(data.leistung().batterie_leistung());
+        } else {
+            quellen.set_laden(-data.leistung().batterie_leistung());
+            quellen.set_entladen(0);
+        }
+
+        if (data.leistung().netz_leistung() < 0) {
+            quellen.set_einspeisung(-data.leistung().netz_leistung());
+            quellen.set_bezug(0);
+        } else {
+            quellen.set_einspeisung(0);
+            quellen.set_bezug(data.leistung().netz_leistung());
+        }
+        *data.mutable_quellen() = quellen;
 
 
         return handler(data);

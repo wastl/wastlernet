@@ -4,7 +4,7 @@ project(wastlernet)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 enable_testing()
 
-INCLUDE(FindGTest)
+INCLUDE(BuildGTest)
 INCLUDE(FindPostgreSQL)
 INCLUDE(FindGumbo)
 INCLUDE(FindOpenSSL)
@@ -63,7 +63,6 @@ else()
 endif()
 
 
-find_package(GTest REQUIRED)
 
 find_package(prometheus-cpp REQUIRED)
 if (TARGET prometheus-cpp::core)
@@ -99,7 +98,7 @@ ADD_EXECUTABLE(wastlernet
 )
 TARGET_LINK_LIBRARIES(wastlernet
         config
-        hafnertec_client solvis_client senec_client weather_client #fronius_client
+        hafnertec_client solvis_client senec_client weather_client fronius_client
         cpprestsdk::cpprest Threads::Threads gumbo gumbo_query
         ${ABSL_LIBRARIES}
         pqxx

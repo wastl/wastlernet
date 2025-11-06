@@ -24,7 +24,7 @@ ADD_DEPENDENCIES(fronius_client config)
 
 # Simple CLI to test Fronius Solar API JSON client against a live server
 add_executable(fronius_client_debug
-        fronius_modbus_debug.cpp
+        fronius_client_debug.cpp
         ${CMAKE_SOURCE_DIR}/base/metrics.h ${CMAKE_SOURCE_DIR}/base/metrics.cpp
         ${CMAKE_SOURCE_DIR}/base/utility.h ${CMAKE_SOURCE_DIR}/base/utility.cpp
 )

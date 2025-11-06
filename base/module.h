@@ -15,8 +15,24 @@
 namespace wastlernet {
     typedef absl::flat_hash_map<std::string, std::string> StateCache;
 
+    class IModule {
+    public:
+        virtual ~IModule() = default;
+
+        // Perform initialization needed before starting.
+        virtual absl::Status Init() = 0;
+
+        virtual void Start() = 0;
+
+        virtual void Abort() = 0;
+
+        virtual void Wait() = 0;
+
+        virtual std::string Name() = 0;
+    };
+
     template<class Data>
-    class Module {
+    class Module : public IModule {
     protected:
         timescaledb::TimescaleConnection<Data> conn_;
 
@@ -39,14 +55,6 @@ namespace wastlernet {
         virtual absl::Status Init() {
             return conn_.Init();
         }
-
-        virtual void Start() = 0;
-
-        virtual void Abort() = 0;
-
-        virtual void Wait() = 0;
-
-        virtual std::string Name() = 0;
     };
 
     template<class Data>

@@ -8,8 +8,17 @@ hafnertec {
   poll_interval: 1
 }
 
-senec {
-  host: "http://192.168.178.37/"
+
+fronius {
+  master: {
+    host: "http://192.168.179.20/"
+  }
+  slave: {
+    host: "http://192.168.179.21/"
+  }
+  meter: {
+    host: "http://192.168.179.20/"
+  }
   poll_interval: 1
 }
 

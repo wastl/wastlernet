@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nlohmann-json3-dev \
     python3 \
     libmbedtls-dev \
+    ninja-build \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user for safety
@@ -33,7 +34,7 @@ WORKDIR /app
 COPY . /app
 
 # Build only the wastlernet target in Release mode
-RUN cmake -S /app -B /app/build -DCMAKE_BUILD_TYPE=Release \
+RUN cmake -S /app -B /app/build -G Ninja -DCMAKE_BUILD_TYPE=Release \
     && cmake --build /app/build --target wastlernet -j \
     && install -D /app/build/wastlernet /usr/local/bin/wastlernet
 

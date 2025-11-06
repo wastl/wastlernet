@@ -10,6 +10,11 @@ message Config {
   optional Fritzbox fritzbox = 6;
   optional Hue hue = 7;
   optional REST rest = 8;
+  optional Fronius fronius = 9;
+}
+
+message HttpServer {
+  optional string host = 1;
 }
 
 message Senec {
@@ -27,9 +32,10 @@ message Solvis {
 
 message Fronius {
   // MODBUS host and port
-  optional string host = 1;
-  optional int32 port = 2;
-  optional int32 poll_interval = 3;
+  optional HttpServer master = 1;
+  optional HttpServer slave = 2;
+  optional HttpServer meter = 3;
+  optional int32 poll_interval = 4;
 }
 
 message Hafnertec {

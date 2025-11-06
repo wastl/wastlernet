@@ -8,6 +8,8 @@
 #include <glog/logging.h>
 #include <absl/strings/str_cat.h>
 #include <chrono>
+#include <cmath>
+#include <algorithm>
 
 #include "base/metrics.h"
 #include "fronius_client.h"
@@ -177,6 +179,56 @@ namespace fronius {
         return st;
     }
 
+
+    absl::Status FroniusEnergyMeterClient::Query(const std::function<void(double consumption_watts)> &handler) {
+        auto start_time = std::chrono::high_resolution_clock::now();
+
+        auto st = Execute([&](const http_response& response) {
+            if (response.status_code() != status_codes::OK) {
+                LOGF(ERROR) << "Fronius query failed: " << response.reason_phrase();
+                return absl::InternalError(absl::StrCat("Fronius query failed: ", response.reason_phrase()));
+            }
+
+            value result = response.extract_json(true).get();
+
+            // Body/Data/0
+            const value* Meter0 = json_getp(result, {"Body","Data","0"});
+            if (!Meter0) {
+                LOGF(ERROR) << "Unexpected JSON: missing Body.Data.0: " << result.serialize();
+                return absl::InternalError("Unexpected Fronius JSON (no Body.Data.0)");
+            }
+
+            // Prefer per-phase powers if available
+            double p1 = json_get_double(*Meter0, "PowerApparent_S_Phase_1", NAN);
+            double p2 = json_get_double(*Meter0, "PowerApparent_S_Phase_2", NAN);
+            double p3 = json_get_double(*Meter0, "PowerApparent_S_Phase_3", NAN);
+
+            double consumption = 0.0;
+            if (!std::isnan(p1) && !std::isnan(p2) && !std::isnan(p3)) {
+                // Total house consumption as sum of positive per-phase power (import on that phase)
+                auto pos = [](double v){ return v > 0 ? v : 0.0; };
+                consumption = pos(p1) + pos(p2) + pos(p3);
+            } else {
+                double psum = json_get_double(*Meter0, "PowerApparent_S_Sum", 0.0);
+                consumption = std::max(0.0, psum);
+            }
+
+            handler(consumption);
+            return absl::OkStatus();
+        });
+
+        if (st.ok()) {
+            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_query_counter.Increment();
+            auto end_time = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration = end_time - start_time;
+            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_duration_ms.Observe(
+                std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+        } else {
+            wastlernet::metrics::WastlernetMetrics::GetInstance().fronius_error_counter.Increment();
+        }
+
+        return st;
+    }
 
     http_client_config FroniusBaseClient::ClientConfig() {
         http_client_config config = HttpConnection::ClientConfig();

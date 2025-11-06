@@ -128,6 +128,31 @@ namespace fronius {
         /** @brief Human-readable client name for logging/debugging. */
         std::string Name() override { return "FroniusBatteryClient"; }
    };
+
+    /**
+     * @brief Retrieve live energy meter information and compute house consumption.
+     *
+     * Endpoint: `/solar_api/v1/GetMeterRealtimeData.cgi`
+     * JSON path: `Body.Data.0`
+     *
+     * The client computes total house consumption in Watts as the sum of the
+     * positive per-phase real powers: `sum(max(0, PowerReal_P_Phase_i))`.
+     * If per-phase fields are missing, it falls back to `max(0, PowerReal_P_Sum)`.
+     */
+    class FroniusEnergyMeterClient : public FroniusBaseClient {
+    public:
+        explicit FroniusEnergyMeterClient(const std::string &base_url)
+            : FroniusBaseClient(base_url, "/solar_api/v1/GetMeterRealtimeData.cgi") {}
+
+        /**
+         * @brief Query the device and deliver computed consumption via callback.
+         * @param handler Callback receiving total house consumption in Watts.
+         */
+        absl::Status Query(const std::function<void(double consumption_watts)> &handler);
+
+    protected:
+        std::string Name() override { return "FroniusEnergyMeterClient"; }
+    };
 }
 
 #endif // WASTLERNET_FRONIUS_CLIENT_H

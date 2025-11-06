@@ -9,9 +9,17 @@
 #ifndef WASTLERNET_FRONIUS_MODULE_H
 #define WASTLERNET_FRONIUS_MODULE_H
 namespace fronius {
+    namespace {
+        inline std::string normalize_host(const std::string &host) {
+            return host.rfind("http", 0) == 0 ? host : std::string("http://") + host;
+        }
+    }
+
     class FroniusModule : public wastlernet::PollingModule<FroniusData> {
     private:
         FroniusPowerFlowClient pf_client_;
+        FroniusPowerFlowClient slave_client_;
+        FroniusEnergyMeterClient energy_client_;
         FroniusBatteryClient battery_client_;
 
     protected:
@@ -20,9 +28,11 @@ namespace fronius {
     public:
         FroniusModule(const wastlernet::TimescaleDB &db_cfg, const wastlernet::Fronius &client_cfg,
                       wastlernet::StateCache *c)
-                : wastlernet::PollingModule<FroniusData>(db_cfg, new FroniusWriter, c, client_cfg.poll_interval()),
-                  pf_client_(client_cfg.host().rfind("http", 0) == 0 ? client_cfg.host() : std::string("http://") + client_cfg.host()),
-                  battery_client_(client_cfg.host().rfind("http", 0) == 0 ? client_cfg.host() : std::string("http://") + client_cfg.host())
+                : PollingModule(db_cfg, new FroniusWriter, c, client_cfg.poll_interval()),
+                  pf_client_(normalize_host(client_cfg.master().host())),
+                  slave_client_(normalize_host(client_cfg.slave().host())),
+                  energy_client_(normalize_host(client_cfg.meter().host())),
+                  battery_client_(normalize_host(client_cfg.master().host()))
         {}
 
         std::string Name() override {
