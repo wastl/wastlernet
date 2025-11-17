@@ -36,68 +36,69 @@ using namespace std::chrono_literals;
 using web::http::http_request;
 using web::http::experimental::listener::http_listener;
 
-namespace wastlernet {
-    namespace rest {
-        template<class T>
-        void ParseAndConvert(const std::string &binary_message, std::string *output) {
-            JsonPrintOptions options;
-            options.add_whitespace = true;
 
-            T value;
-            value.ParseFromString(binary_message);
-            MessageToJsonString(value, output, options);
-        }
+namespace wastlernet::rest {
+    template <class T>
+    void ParseAndConvert(const std::string& binary_message, std::string* output) {
+        JsonPrintOptions options;
+        options.add_whitespace = true;
 
-        // Start a listener serving the current state of different modules as JSON.
-        std::unique_ptr<http_listener>
-        start_listener(const std::string &listen, const wastlernet::StateCache *stateCache) {
-            auto listener = std::make_unique<http_listener>(listen);
+        T value;
+        value.ParseFromString(binary_message);
+        MessageToJsonString(value, output, options);
+    }
 
-            LOG(INFO) << "starting REST listener on address " << listen;
+    // Start a listener serving the current state of different modules as JSON.
+    std::unique_ptr<http_listener>
+    start_listener(const std::string& listen, const wastlernet::StateCache* stateCache) {
+        auto listener = std::make_unique<http_listener>(listen);
 
-            listener->support([=](const http_request &request) {
-                auto uri = request.relative_uri();
+        LOG(INFO) << "starting REST listener on address " << listen;
 
-                LOG(INFO) << "Received REST request to " << uri.path();
+        listener->support([=](const http_request& request) {
+            auto uri = request.relative_uri();
 
-                std::string path = std::string(absl::StripPrefix(uri.path(), "/"));
+            LOG(INFO) << "Received REST request to " << uri.path();
 
-                try {
-                    auto it = stateCache->find(path);
-                    if (it != stateCache->cend()) {
-                        std::string binary_message = it->second;
-                        std::string output;
+            std::string path = std::string(absl::StripPrefix(uri.path(), "/"));
 
-                        if (path == "weather") {
-                            ParseAndConvert<weather::WeatherData>(binary_message, &output);
-                        } else if (path == "solvis") {
-                            ParseAndConvert<solvis::SolvisData>(binary_message, &output);
-                        } else if (path == "senec") {
-                            ParseAndConvert<senec::SenecData>(binary_message, &output);
-                        } else if (path == "hafnertec") {
-                            ParseAndConvert<hafnertec::HafnertecData>(binary_message, &output);
-                        } else {
-                            throw std::runtime_error(absl::StrCat("unsupported module: ", path));
-                        }
+            try {
+                auto it = stateCache->find(path);
+                if (it != stateCache->cend()) {
+                    std::string binary_message = it->second;
+                    std::string output;
 
-                        request.reply(web::http::status_codes::OK, output, "text/json").get();
+                    if (path == "weather") {
+                        ParseAndConvert<weather::WeatherData>(binary_message, &output);
+                    } else if (path == "solvis") {
+                        ParseAndConvert<solvis::SolvisData>(binary_message, &output);
+                    } else if (path == "senec") {
+                        ParseAndConvert<senec::SenecData>(binary_message, &output);
+                    } else if (path == "hafnertec") {
+                        ParseAndConvert<hafnertec::HafnertecData>(binary_message, &output);
                     } else {
-                        request.reply(web::http::status_codes::NotFound, absl::StrCat("data for module \"", path, "\" not found"), "text/plain").get();
+                        throw std::runtime_error(absl::StrCat("unsupported module: ", path));
                     }
-                } catch (const std::exception &e) {
-                    LOG(ERROR) << "Error while resolving REST request: " << e.what();
-                    request.reply(web::http::status_codes::InternalError);
+
+                    request.reply(web::http::status_codes::OK, output, "text/json").get();
+                } else {
+                    request.reply(web::http::status_codes::NotFound,
+                                  absl::StrCat("data for module \"", path, "\" not found"), "text/plain").get();
                 }
-            });
+            } catch (const std::exception& e) {
+                LOG(ERROR) << "Error while resolving REST request: " << e.what();
+                request.reply(web::http::status_codes::InternalError).get();
+            }
+        });
 
-            listener->open().get();
+        listener->open().get();
 
-            return std::move(listener);
-        }
+        return std::move(listener);
     }
 }
 
-int main(int argc, char *argv[]) {
+
+int main(int argc, char* argv[]) {
     if (argc != 2) {
         std::cerr << "Usage: wastlernet <path-to-config.yml>" << std::endl;
         return 1;
@@ -114,15 +115,16 @@ int main(int argc, char *argv[]) {
         LOG(ERROR) << "Could not open configuration file";
         return 1;
     }
-    ZeroCopyInputStream* cfg_file = new FileInputStream(fd);
-    if (!google::protobuf::TextFormat::Parse(cfg_file, &config)) {
-        LOG(ERROR) << "Unable to parse configuration file" << std::endl;
-        return 1;
-    }
-    delete cfg_file;
-    close(fd);
 
-    LOG(INFO) << "Loaded configuration." << std::endl;
+    {
+        std::unique_ptr<ZeroCopyInputStream> cfg_file = std::make_unique<FileInputStream>(fd);
+        if (!google::protobuf::TextFormat::Parse(cfg_file.get(), &config)) {
+            LOG(ERROR) << "Unable to parse configuration file" << std::endl;
+            return 1;
+        }
+    }
+    LOG(INFO) << "Loaded configuration from " << argv[1] << std::endl;
+    close(fd);
 
     std::string prometheus_address;
     if (config.has_prometheus() && config.prometheus().has_listen()) {
@@ -147,7 +149,8 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
-        auto solvis_client = std::make_unique<solvis::SolvisModule>(config.timescaledb(),config.solvis(), solvis_connection.get(), &current_state);
+        auto solvis_client = std::make_unique<solvis::SolvisModule>(config.timescaledb(), config.solvis(),
+                                                                    solvis_connection.get(), &current_state);
         solvis_st = solvis_client->Init();
         if (!solvis_st.ok()) {
             LOG(ERROR) << "Could not initialize Solvis module: " << solvis_st;
@@ -172,9 +175,10 @@ int main(int argc, char *argv[]) {
     }
 
     if (config.has_hafnertec()) {
-        auto hafnertec_client = std::make_unique<hafnertec::HafnertecModule>(config.timescaledb(), config.hafnertec(), &current_state);
+        auto hafnertec_client = std::make_unique<hafnertec::HafnertecModule>(
+            config.timescaledb(), config.hafnertec(), &current_state);
         auto hafnertec_st = hafnertec_client->Init();
-        if(!hafnertec_st.ok()) {
+        if (!hafnertec_st.ok()) {
             LOG(ERROR) << "Could not initialize Hafnertec module: " << hafnertec_st;
             return 1;
         }
@@ -187,7 +191,7 @@ int main(int argc, char *argv[]) {
     if (config.has_senec()) {
         auto senec_client = std::make_unique<senec::SenecModule>(config.timescaledb(), config.senec(), &current_state);
         auto senec_st = senec_client->Init();
-        if(!senec_st.ok()) {
+        if (!senec_st.ok()) {
             LOG(ERROR) << "Could not initialize Senec module: " << senec_st;
             return 1;
         }
@@ -198,9 +202,10 @@ int main(int argc, char *argv[]) {
     }
 
     if (config.has_fronius()) {
-        auto fronius_client = std::make_unique<fronius::FroniusModule>(config.timescaledb(), config.fronius(), &current_state);
+        auto fronius_client = std::make_unique<fronius::FroniusModule>(config.timescaledb(), config.fronius(),
+                                                                       &current_state);
         auto fronius_st = fronius_client->Init();
-        if(!fronius_st.ok()) {
+        if (!fronius_st.ok()) {
             LOG(ERROR) << "Could not initialize Fronius module: " << fronius_st;
             return 1;
         }
@@ -211,9 +216,10 @@ int main(int argc, char *argv[]) {
     }
 
     if (config.has_weather()) {
-        auto weather_client = std::make_unique<weather::WeatherModule>(config.timescaledb(), config.weather(), &current_state);
+        auto weather_client = std::make_unique<weather::WeatherModule>(config.timescaledb(), config.weather(),
+                                                                       &current_state);
         auto weather_st = weather_client->Init();
-        if(!weather_st.ok()) {
+        if (!weather_st.ok()) {
             LOG(ERROR) << "Could not initialize Weather module: " << weather_st;
             return 1;
         }
@@ -227,7 +233,7 @@ int main(int argc, char *argv[]) {
 
     LOG(INFO) << "Smart Home Controller startup sequence completed.";
 
-    for (auto &module : modules) {
+    for (auto& module : modules) {
         module->Wait();
     }
 }

@@ -17,8 +17,8 @@
 
 #ifndef METRICS_H
 #define METRICS_H
-namespace wastlernet {
-namespace metrics {
+
+namespace wastlernet::metrics {
 
 struct BucketsConfig {
     // Prometheus base unit: seconds
@@ -32,6 +32,10 @@ public:
         static WastlernetMetrics instance;
         return instance;
     }
+
+    // Prevent copy and assignment
+    WastlernetMetrics(const WastlernetMetrics&) = delete;
+    WastlernetMetrics& operator=(const WastlernetMetrics&) = delete;
 
     // Optional: start /metrics endpoint (can also be done in main)
     void StartExposer(const std::string& bind_address = "0.0.0.0:9090");
@@ -73,10 +77,6 @@ private:
     // Private constructor to enforce singleton pattern
     WastlernetMetrics();
 
-    // Prevent copy and assignment
-    WastlernetMetrics(const WastlernetMetrics&) = delete;
-    WastlernetMetrics& operator=(const WastlernetMetrics&) = delete;
-
     // Internal helpers
     struct QueryChildren {
         prometheus::Counter* ok_counter = nullptr;    // queries_total{result="ok"}
@@ -97,5 +97,5 @@ private:
     prometheus::Family<prometheus::Histogram>* query_latency_seconds_family_; // label: service
 };
 }
-}
+
 #endif //METRICS_H

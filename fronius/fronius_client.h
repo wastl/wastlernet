@@ -18,6 +18,7 @@
  * returned JSON and expose the essential data through a callback provided
  * by the caller. Errors are reported using absl::Status.
  */
+#pragma once
 
 #include <functional>
 #include <absl/status/status.h>

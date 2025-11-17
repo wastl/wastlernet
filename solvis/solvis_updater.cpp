@@ -14,8 +14,7 @@
 #define LOGS(level) LOG(level) << "[solvis] "
 
 absl::Status solvis::SolvisUpdater::Update() {
-    auto it = current_state_->find("weather");
-    if (it != current_state_->cend()) {
+    if (auto it = current_state_->find("weather"); it != current_state_->cend()) {
         weather::WeatherData weather;
         weather.ParseFromString(it->second);
         if (weather.has_indoor()) {

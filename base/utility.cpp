@@ -6,7 +6,7 @@
 #include <thread>
 
 namespace wastlernet {
-    absl::Status retry_with_backoff(std::function<absl::Status()> method, int times) {
+    absl::Status retry_with_backoff(const std::function<absl::Status()>& method, int times) {
         absl::Status st;
         for (int retries = 0; retries < times; retries++) {
             st = method();

@@ -16,7 +16,7 @@ absl::Status hafnertec::HafnertecModule::Query(std::function<absl::Status(const 
 }
 
 absl::Status hafnertec::HafnertecModule::Init() {
-    auto st = PollingModule<HafnertecData>::Init();
+    auto st = PollingModule::Init();
     if (!st.ok()) {
         return st;
     }

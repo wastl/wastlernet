@@ -24,6 +24,7 @@
 // - For POST requests, optionally override RequestBody() to provide a JSON payload.
 // - Provide a Name() in derived classes for logging/diagnostics.
 //
+#pragma once
 #include <optional>
 #include <string>
 #include <absl/status/status.h>
@@ -100,7 +101,7 @@ namespace wastlernet {
          * Override to customize the HTTP client configuration, e.g. credentials, proxy, TLS cert validation,
          * timeouts, etc.
          */
-        virtual web::http::client::http_client_config ClientConfig() { return web::http::client::http_client_config(); }
+        virtual web::http::client::http_client_config ClientConfig() { return {}; }
 
         /**
          * Override to provide a JSON request body for POST requests.

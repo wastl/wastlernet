@@ -21,6 +21,7 @@
 /// in-memory introspection and should not be treated as a durable store.
 ///
 /// Created by wastl on 07.04.23. Updated on 2025-11-06 12:51.
+#pragma once
 #include <chrono>
 #include <thread>
 #include <type_traits>

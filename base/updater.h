@@ -1,6 +1,7 @@
 //
 // Created by wastl on 27.10.23.
 //
+#pragma once
 #include <chrono>
 #include <thread>
 #include <absl/status/status.h>

@@ -15,7 +15,7 @@ absl::Status senec::SenecModule::Query(std::function<absl::Status(const SenecDat
 }
 
 absl::Status senec::SenecModule::Init() {
-    auto st = PollingModule<SenecData>::Init();
+    auto st = PollingModule::Init();
     if (!st.ok()) {
         return st;
     }

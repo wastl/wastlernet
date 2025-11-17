@@ -1,6 +1,7 @@
 //
 // Created by wastl on 09.12.22.
 //
+#pragma once
 #include <functional>
 #include <string>
 #include <absl/strings/string_view.h>

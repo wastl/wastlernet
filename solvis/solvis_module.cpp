@@ -87,10 +87,6 @@ absl::Status solvis::SolvisModule::Query(std::function<absl::Status(const solvis
                 data.add_analog_out(tab_reg[46 + i] * 0.1);
             }
 
-            std::ofstream dbg("/tmp/solvis.textpb");
-            dbg << data.DebugString();
-            dbg.close();
-
             LOGS(INFO) << "running handler";
 
             return handler(data);

@@ -24,6 +24,7 @@
 // - Implement Name() in derived classes to aid logging/diagnostics.
 // - Use the static conversion helpers to interpret register buffers returned by libmodbus.
 //
+#pragma once
 #include <bitset>
 #include <string>
 #include <absl/status/status.h>
@@ -70,7 +71,7 @@ namespace wastlernet {
          * @param method A function that receives the active modbus_t* and returns status.
          * @return absl::OkStatus if the callback returned OK; otherwise a non-OK status.
          */
-        absl::Status Execute(std::function<absl::Status(modbus_t*)> method);
+        absl::Status Execute(const std::function<absl::Status(modbus_t*)>& method);
 
     private:
         absl::Mutex mutex_;

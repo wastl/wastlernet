@@ -1,8 +1,8 @@
 //
 // Created by wastl on 30.10.23.
 //
+#pragma once
 #include <string>
-
 
 #include "base/modbus_connection.h"
 #include "config/config.pb.h"

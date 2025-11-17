@@ -46,7 +46,7 @@ absl::Status wastlernet::ModbusConnection::Init() {
     return st;
 }
 
-absl::Status wastlernet::ModbusConnection::Execute(std::function<absl::Status(modbus_t *)> method) {
+absl::Status wastlernet::ModbusConnection::Execute(const std::function<absl::Status(modbus_t *)>& method) {
     if (!initialized_) {
         return absl::FailedPreconditionError("Modbus connection not initialized");
     }
@@ -84,7 +84,7 @@ int16_t wastlernet::ModbusConnection::toInt16(const uint16_t *u) {
     union {
         uint16_t u16;
         int16_t i16;
-    } converter;
+    } converter {};
     converter.u16 = *u;
     return converter.i16;
 }
@@ -94,7 +94,7 @@ int32_t wastlernet::ModbusConnection::toInt32(const uint16_t *u) {
    union {
         uint32_t u32;
         int32_t i32;
-    } converter;
+    } converter {};
 
     converter.u32 = ((uint32_t)u[0] << 16) | u[1];
     return converter.i32;
@@ -110,7 +110,7 @@ float wastlernet::ModbusConnection::toFloat(const uint16_t *u) {
     union {
         uint32_t u32;
         float f32;
-    } converter;
+    } converter {};
 
     converter.u32 = ((uint32_t)u[0] << 16) | u[1];
 

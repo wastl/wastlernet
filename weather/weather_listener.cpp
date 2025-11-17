@@ -71,7 +71,7 @@ namespace weather {
             } catch(const std::exception &e) {
                 LOGW(ERROR) << "Error while updating data: " << e.what();
                 wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("weather", false);
-                request.reply(web::http::status_codes::InternalError);
+                request.reply(web::http::status_codes::InternalError).get();
             }
         });
 

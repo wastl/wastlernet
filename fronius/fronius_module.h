@@ -1,6 +1,7 @@
 //
 // Created by wastl on 02.07.25.
 //
+#pragma once
 #include "base/module.h"
 #include "fronius/fronius.pb.h"
 #include "fronius/fronius_client.h"
@@ -42,4 +43,4 @@ namespace fronius {
         absl::Status Init() override;
     };
 }
-#endif //FRONIUS_MODULE_H
+#endif //WASTLERNET_FRONIUS_MODULE_H

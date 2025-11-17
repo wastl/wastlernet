@@ -1,6 +1,7 @@
 //
 // Created by wastl on 03.04.23.
 //
+#pragma once
 #include <absl/status/status.h>
 #include <absl/strings/str_format.h>
 #include <google/protobuf/message.h>
@@ -46,7 +47,9 @@ namespace timescaledb {
                 TimescaleWriter<Data>* writer,
                 absl::string_view db, absl::string_view host, int port,
                 absl::string_view user, absl::string_view password)
-                : writer_(writer), db_(db), host_(host), port_(port), user_(user), password_(password) { }
+            : writer_(writer), db_(db), host_(host), port_(port), reconnect_times_(0),
+              user_(user), password_(password) {
+        }
 
         absl::Status Init();
 
@@ -96,7 +99,7 @@ absl::Status timescaledb::TimescaleConnection<Data>::Reconnect() {
         try {
             conn_->close();
         } catch (std::exception const &e) {}
-        delete conn_.release();
+        conn_ = nullptr;
         return Init();
     }
     return absl::OkStatus();

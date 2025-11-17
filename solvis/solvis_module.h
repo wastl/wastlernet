@@ -1,6 +1,7 @@
 //
 // Created by wastl on 07.04.23.
 //
+#pragma once
 #include "base/module.h"
 #include "solvis/solvis.pb.h"
 #include "solvis/solvis_modbus.h"
@@ -19,8 +20,7 @@ namespace solvis {
     public:
         SolvisModule(const wastlernet::TimescaleDB &db_cfg, const wastlernet::Solvis &client_cfg,
                      SolvisModbusConnection *conn, wastlernet::StateCache *c)
-                : wastlernet::PollingModule<SolvisData>(db_cfg, new SolvisWriter, c, client_cfg.poll_interval()),
-                  conn_(conn) {}
+                : PollingModule(db_cfg, new SolvisWriter, c, client_cfg.poll_interval()), conn_(conn) {}
 
         std::string Name() override {
             return "solvis";

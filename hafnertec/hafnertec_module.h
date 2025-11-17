@@ -1,6 +1,7 @@
 //
 // Created by wastl on 07.04.23.
 //
+#pragma once
 #include "hafnertec_client.h"
 #include "base/module.h"
 #include "hafnertec/hafnertec.pb.h"
@@ -18,7 +19,7 @@ namespace hafnertec {
 
     public:
         HafnertecModule(const wastlernet::TimescaleDB& db_cfg, const wastlernet::Hafnertec& client_cfg, wastlernet::StateCache* c)
-        : wastlernet::PollingModule<HafnertecData>(db_cfg, new HafnertecWriter, c, client_cfg.poll_interval()),
+        : PollingModule(db_cfg, new HafnertecWriter, c, client_cfg.poll_interval()),
                 client_(client_cfg.host(), client_cfg.user(), client_cfg.password()) {}
 
         std::string Name() override {

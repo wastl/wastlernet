@@ -1,6 +1,7 @@
 //
 // Created by wastl on 07.04.23.
 //
+#pragma once
 #include <pqxx/pqxx>
 #include <absl/status/status.h>
 #include "timescaledb/timescaledb-client.h"
