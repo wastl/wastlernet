@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev \
     libmodbus-dev \
     libcpprest-dev \
+    libmosquitto-dev \
     prometheus-cpp-dev \
     nlohmann-json3-dev \
     python3 \

@@ -79,6 +79,7 @@ ADD_SUBDIRECTORY(senec)
 ADD_SUBDIRECTORY(weather)
 ADD_SUBDIRECTORY(solvis)
 ADD_SUBDIRECTORY(fronius)
+ADD_SUBDIRECTORY(shelly)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
@@ -98,7 +99,7 @@ ADD_EXECUTABLE(wastlernet
 )
 TARGET_LINK_LIBRARIES(wastlernet
         config
-        hafnertec_client solvis_client senec_client weather_client fronius_client
+        hafnertec_client solvis_client senec_client weather_client fronius_client shelly_client
         cpprestsdk::cpprest Threads::Threads gumbo gumbo_query
         ${ABSL_LIBRARIES}
         pqxx

@@ -1,0 +1,23 @@
+syntax = "proto2";
+package wastlernet.shelly;
+
+message ShellyData {
+  optional string device_name = 1;
+
+  optional TemperatureData temperature_data = 2;
+  optional MovementData movement_data = 3;
+  optional EnergyData energy_data = 4;
+}
+
+message TemperatureData {
+  optional double temperature = 1;
+  optional double humidity = 2;
+}
+
+message MovementData {
+
+}
+
+message EnergyData {
+
+}
