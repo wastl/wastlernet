@@ -33,3 +33,12 @@ CREATE TABLE shelly_energy
     frequency NUMERIC(4, 1)
 );
 SELECT create_hypertable('shelly_energy', 'time');
+
+CREATE TABLE shelly_motion
+(
+    time   TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    device VARCHAR(32) NOT NULL,
+    motion BOOLEAN
+);
+SELECT create_hypertable('shelly_motion', 'time');
+

@@ -62,6 +62,13 @@ INSERT INTO shelly_energy(
     frequency
 ) VALUES ($1,$2,$3,$4,$5))");
 
+    // Motion: single boolean value plus device
+    conn.prepare("shelly_insert_motion", R"(
+INSERT INTO shelly_motion(
+    device,
+    motion
+) VALUES ($1,$2))");
+
     return absl::OkStatus();
 }
 
@@ -113,6 +120,17 @@ absl::Status ShellyWriter::write(pqxx::work &tx, const ShellyData &data) {
             pqxx::prepped{"shelly_insert_energy_all"},
             pqxx::params{ device, e.power(), e.voltage(), e.current(), e.frequency() }
         );
+    }
+
+    // Insert motion if provided
+    if (data.has_motion_data()) {
+        const auto &m = data.motion_data();
+        if (m.has_motion()) {
+            tx.exec(
+                pqxx::prepped{"shelly_insert_motion"},
+                pqxx::params{ device, m.motion() }
+            );
+        }
     }
 
     return absl::OkStatus();

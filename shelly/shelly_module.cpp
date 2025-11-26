@@ -178,6 +178,7 @@ namespace wastlernet::shelly {
 
             }
 
+            // Relais / Switches
             if (check_fields(payload_json, {"apower", "current", "voltage", "freq"})) {
                 EnergyData* energy = data.mutable_energy_data();
                 energy->set_power(payload_json.at("apower").as_double());
@@ -185,6 +186,21 @@ namespace wastlernet::shelly {
                 energy->set_voltage(payload_json.at("voltage").as_double());
                 energy->set_frequency(payload_json.at("freq").as_double());
                 has_data = true;
+            }
+
+            // Bluetooth connected BLU sensors, data forwarded e.g. by a relais
+            if (check_fields(payload_json, {"service_data"})) {
+                auto service_data = payload_json.at("service_data");
+
+                if (check_fields(service_data, {"illuminance"})) {
+                    data.mutable_light_data()->set_lux(service_data.at("illuminance").as_integer());
+                    has_data = true;
+                }
+
+                if (check_fields(service_data, {"motion"})) {
+                    data.mutable_motion_data()->set_motion(service_data.at("motion").as_integer() == 1);
+                    has_data = true;
+                }
             }
 
             if (has_data)

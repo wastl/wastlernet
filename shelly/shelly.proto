@@ -5,7 +5,7 @@ message ShellyData {
   optional string device_name = 1;
 
   optional TemperatureData temperature_data = 2;
-  optional MovementData movement_data = 3;
+  optional MotionData motion_data = 3;
   optional LightData light_data = 4;
   optional EnergyData energy_data = 5;
 }
@@ -20,8 +20,8 @@ message LightData {
   optional string illumination = 2;
 }
 
-message MovementData {
-
+message MotionData {
+  optional bool motion = 1;
 }
 
 message EnergyData {
