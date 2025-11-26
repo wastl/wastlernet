@@ -142,20 +142,22 @@ namespace wastlernet::shelly {
             LOG(INFO) << absl::StrCat("Shelly MQTT message on ", topic, ": ",
                                       utility::conversions::to_utf8string(payload_json.serialize()));
 
-            if (check_fields(payload_json, {"method", "params", "src"}) &&
-                (check_method(payload_json, "NotifyFullStatus") || check_method(payload_json, "NotifyStatus"))) {
-                ShellyData data;
-                std::vector<std::string> dsts = absl::StrSplit(utility::conversions::to_utf8string(topic), '/');
+            bool has_data = false;
 
-                if (dsts.size() > 2) {
-                    data.set_device_name(absl::StrCat(dsts[1], "-", dsts[2]));
-                } else {
-                    // fallback
-                    data.set_device_name(payload_json.at("src").as_string());
-                }
+            ShellyData data;
+            std::vector<std::string> dsts = absl::StrSplit(utility::conversions::to_utf8string(topic), '/');
+
+            if (dsts.size() > 2) {
+                data.set_device_name(absl::StrCat(dsts[1], "-", dsts[2]));
+            } else {
+                // fallback
+                data.set_device_name(topic);
+            }
+
+            if (check_fields(payload_json, {"method", "params"}) &&
+                (check_method(payload_json, "NotifyFullStatus") || check_method(payload_json, "NotifyStatus"))) {
 
                 auto params = payload_json.at("params");
-                bool has_data = false;
 
                 // Thermometer
                 if (params.has_field("temperature:0")) {
@@ -173,20 +175,20 @@ namespace wastlernet::shelly {
                     has_data = true;
                 }
 
-                if (check_fields(params, {"apower", "current", "voltage", "freq"})) {
-                    EnergyData* energy = data.mutable_energy_data();
-                    energy->set_power(params.at("apower").as_double());
-                    energy->set_current(params.at("current").as_double());
-                    energy->set_voltage(params.at("voltage").as_double());
-                    energy->set_frequency(params.at("freq").as_double());
-                    has_data = true;
-                }
 
-                if (has_data)
-                    return Update(data);
-
-                return absl::OkStatus();
             }
+
+            if (check_fields(payload_json, {"apower", "current", "voltage", "freq"})) {
+                EnergyData* energy = data.mutable_energy_data();
+                energy->set_power(payload_json.at("apower").as_double());
+                energy->set_current(payload_json.at("current").as_double());
+                energy->set_voltage(payload_json.at("voltage").as_double());
+                energy->set_frequency(payload_json.at("freq").as_double());
+                has_data = true;
+            }
+
+            if (has_data)
+                return Update(data);
 
             return absl::OkStatus();
         } catch (const std::exception& e) {
