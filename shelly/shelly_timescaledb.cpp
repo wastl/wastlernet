@@ -52,6 +52,16 @@ INSERT INTO shelly_light(
     illumination
 ) VALUES ($1,NULL,$2))");
 
+    // Energy: all fields present are required by our module before writing
+    conn.prepare("shelly_insert_energy_all", R"(
+INSERT INTO shelly_energy(
+    device,
+    power,
+    voltage,
+    current,
+    frequency
+) VALUES ($1,$2,$3,$4,$5))");
+
     return absl::OkStatus();
 }
 
@@ -93,6 +103,16 @@ absl::Status ShellyWriter::write(pqxx::work &tx, const ShellyData &data) {
         } else {
             // neither provided: skip
         }
+    }
+
+    // Insert energy if provided (we only write when all fields are set by the module)
+    if (data.has_energy_data()) {
+        const auto &e = data.energy_data();
+        // The module currently populates all four fields together; insert them as-is.
+        tx.exec(
+            pqxx::prepped{"shelly_insert_energy_all"},
+            pqxx::params{ device, e.power(), e.voltage(), e.current(), e.frequency() }
+        );
     }
 
     return absl::OkStatus();

@@ -25,5 +25,15 @@ message MovementData {
 }
 
 message EnergyData {
+  // Power in Watts
+  optional double power = 1;
 
+  // Voltage in Volts
+  optional double voltage = 2;
+
+  // Current in Ampere
+  optional double current = 3;
+
+  // Frequency in Hz
+  optional double frequency = 4;
 }
