@@ -12,6 +12,7 @@ message Config {
   optional REST rest = 8;
   optional Prometheus prometheus = 9;
   optional Fronius fronius = 10;
+  optional Shelly shelly = 11;
 }
 
 message HttpServer {
@@ -82,4 +83,9 @@ message REST {
 message Prometheus {
   // Address and port to listen on for REST queries (e.g. 127.0.0.1:32154)
   optional string listen = 1;
+}
+
+message Shelly {
+  // Address of the MQTT broker used by Shelly devices
+  optional string mqtt_address = 1;
 }

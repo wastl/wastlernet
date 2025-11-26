@@ -13,13 +13,20 @@ using web::json::value;
 using utility::conversions::to_string_t;
 
 namespace wastlernet::shelly {
+namespace {
+    bool check_fields(const value& json, std::initializer_list<const char*> fields) {
+        return std::all_of(fields.begin(), fields.end(), [&json](const char* f) { return json.has_field(f); });
+    }
 
-void ShellyModule::ParseMqttAddress(std::string* host, int* port) const {
+    bool check_method(const value& json, const char* method) { return json.at("method").as_string() == method; }
+}
+
+void ShellyModule::ParseMqttAddress(const std::string& mqtt_address, std::string* host, int* port) {
     *port = 1883;
-    *host = mqtt_address_;
+    *host = mqtt_address;
     // very small parser: accept "host" or "host:port"
     // Use concrete container to access size/index; using `auto` would yield a Splitter view.
-    std::vector<std::string> parts = absl::StrSplit(mqtt_address_, ':');
+    std::vector<std::string> parts = absl::StrSplit(mqtt_address, ':');
     if (parts.size() == 2) {
         *host = parts[0];
         try {
@@ -30,8 +37,7 @@ void ShellyModule::ParseMqttAddress(std::string* host, int* port) const {
     }
 }
 
-void ShellyModule::OnConnect(struct mosquitto* m, void* obj, int rc) {
-    auto self = static_cast<ShellyModule*>(obj);
+void ShellyModule::OnConnect(mosquitto* m, void* /*obj*/, int rc) {
     if (rc != 0) {
         LOG(ERROR) << "Shelly MQTT connect failed with code " << rc;
         return;
@@ -44,7 +50,7 @@ void ShellyModule::OnConnect(struct mosquitto* m, void* obj, int rc) {
     }
 }
 
-void ShellyModule::OnMessage(struct mosquitto* m, void* obj, const struct mosquitto_message* msg) {
+void ShellyModule::OnMessage(mosquitto* /*m*/, void* obj, const mosquitto_message* msg) {
     auto self = static_cast<ShellyModule*>(obj);
     if (!self) return;
     try {
@@ -55,10 +61,18 @@ void ShellyModule::OnMessage(struct mosquitto* m, void* obj, const struct mosqui
         }
         // Parse JSON using cpprestsdk
         value json = value::parse(to_string_t(payload));
-        self->HandleMqttMessage(topic, json);
+        auto st = self->HandleMqttMessage(topic, json);
+        if (!st.ok()) {
+            LOG(ERROR) << "Shelly MQTT message handling failed: " << st.message();
+        }
     } catch (const std::exception& e) {
         LOG(ERROR) << "Shelly MQTT message handling error: " << e.what();
     }
+}
+
+ShellyModule::ShellyModule(const TimescaleDB& config, timescaledb::TimescaleWriter<ShellyData>* writer,
+    StateCache* current_state, const std::string& mqtt_address): Module(config, writer, current_state) {
+    ParseMqttAddress(mqtt_address, &host_, &port_);
 }
 
 void ShellyModule::Start() {
@@ -77,14 +91,10 @@ void ShellyModule::Start() {
     mosquitto_connect_callback_set(mqtt_, &ShellyModule::OnConnect);
     mosquitto_message_callback_set(mqtt_, &ShellyModule::OnMessage);
 
-    std::string host;
-    int port;
-    ParseMqttAddress(&host, &port);
-
     int keepalive = 60;
-    int rc = mosquitto_connect(mqtt_, host.c_str(), port, keepalive);
+    int rc = mosquitto_connect(mqtt_, host_.c_str(), port_, keepalive);
     if (rc != MOSQ_ERR_SUCCESS) {
-        LOG(ERROR) << "Shelly MQTT connection failed to " << host << ":" << port
+        LOG(ERROR) << "Shelly MQTT connection failed to " << host_ << ":" << port_
                    << " - " << mosquitto_strerror(rc);
         mosquitto_destroy(mqtt_);
         mqtt_ = nullptr;
@@ -104,7 +114,7 @@ void ShellyModule::Start() {
         mosquitto_lib_cleanup();
         return;
     }
-    LOG(INFO) << "Shelly MQTT client started, connecting to " << host << ":" << port;
+    LOG(INFO) << "Shelly MQTT client started, connecting to " << host_ << ":" << port_;
 }
 
 void ShellyModule::Abort() {
@@ -124,13 +134,52 @@ void ShellyModule::Wait() {
     // No explicit worker thread to join here, mosquitto_loop_start manages its own thread
 }
 
-void ShellyModule::HandleMqttMessage(const std::string& topic, const web::json::value& payload_json) {
+absl::Status ShellyModule::HandleMqttMessage(const std::string& topic, const web::json::value& payload_json) {
     try {
         // Default: just log the message. Modules may override to transform into ShellyData and store.
         LOG(INFO) << absl::StrCat("Shelly MQTT message on ", topic, ": ",
                                   utility::conversions::to_utf8string(payload_json.serialize()));
+
+        if (check_fields(payload_json, {"method", "params", "src"}) &&
+            (check_method(payload_json, "NotifyFullStatus") || check_method(payload_json, "NotifyStatus"))) {
+            ShellyData data;
+            std::vector<std::string> dsts = absl::StrSplit(utility::conversions::to_utf8string(topic), '/');
+
+            if (dsts.size() > 2) {
+                data.set_device_name(absl::StrCat(dsts[1], "-", dsts[2]));
+            } else {
+                // fallback
+                data.set_device_name(payload_json.at("src").as_string());
+            }
+
+            auto params = payload_json.at("params");
+            bool has_data = false;
+
+            // Thermometer
+            if (params.has_field("temperature:0")) {
+                data.mutable_temperature_data()->set_temperature(params.at("temperature:0").at("tC").as_double());
+                has_data = true;
+            }
+            if (params.has_field("humidity:0")) {
+                data.mutable_temperature_data()->set_humidity(params.at("humidity:0").at("rh").as_double());
+                has_data = true;
+            }
+            if (params.has_field("illuminance:0")) {
+                data.mutable_light_data()->set_lux(params.at("illuminance:0").at("lux").as_integer());
+                data.mutable_light_data()->set_illumination(params.at("illuminance:0").at("illumination").as_string());
+                has_data = true;
+            }
+
+            if (has_data)
+                return Update(data);
+
+            return absl::OkStatus();
+        }
+
+        return absl::OkStatus();
     } catch (const std::exception& e) {
         LOG(ERROR) << "Error logging Shelly MQTT message: " << e.what();
+        return absl::InternalError(e.what());
     }
 }
 

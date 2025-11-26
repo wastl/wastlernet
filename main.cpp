@@ -22,6 +22,7 @@
 
 #include "hafnertec/hafnertec_module.h"
 #include "senec/senec_module.h"
+#include "shelly/shelly_module.h"
 #include "solvis/solvis_modbus.h"
 #include "solvis/solvis_updater.h"
 #include "solvis/solvis_module.h"
@@ -227,6 +228,20 @@ int main(int argc, char* argv[]) {
         modules.emplace_back(std::move(weather_client));
 
         LOG(INFO) << "Started Weather module." << std::endl;
+    }
+
+    if (config.has_shelly()) {
+        auto shelly_client = std::make_unique<wastlernet::shelly::ShellyModule>(config.timescaledb(), &current_state, config.shelly().mqtt_address());
+
+        auto shelly_st = shelly_client->Init();
+        if (!shelly_st.ok()) {
+            LOG(ERROR) << "Could not initialize Shelly module: " << shelly_st;
+            return 1;
+        }
+        shelly_client->Start();
+        modules.emplace_back(std::move(shelly_client));
+
+        LOG(INFO) << "Started Shelly module." << std::endl;
     }
 
     auto rest_listener = wastlernet::rest::start_listener(config.rest().listen(), &current_state);

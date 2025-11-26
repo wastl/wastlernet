@@ -12,7 +12,10 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/..)
 PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HEADER shelly.proto)
 
 add_compile_definitions(-DGLOG_USE_GLOG_EXPORT)
-ADD_LIBRARY(shelly_client ${PROTO_HEADER} ${PROTO_SRC} shelly_module.cpp shelly_module.h)
+ADD_LIBRARY(shelly_client
+        ${PROTO_HEADER} ${PROTO_SRC}
+        shelly_module.cpp shelly_module.h
+        shelly_timescaledb.cpp shelly_timescaledb.h)
 ## Find and link libmosquitto (MQTT)
 find_library(MOSQUITTO_LIBRARY NAMES mosquitto)
 if (NOT MOSQUITTO_LIBRARY)

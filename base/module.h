@@ -89,7 +89,7 @@ namespace wastlernet {
         ///
         /// Thread-safety: Not thread-safe for concurrent callers; `PollingModule`
         /// ensures single-writer semantics.
-        absl::Status Update(const Data& data) {
+        virtual absl::Status Update(const Data& data) {
             (*current_state_)[Name()] = data.SerializeAsString();
             return conn_.Update(data);
         }

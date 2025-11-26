@@ -47,3 +47,7 @@ rest {
 prometheus {
   listen: "127.0.0.1:32154"
 }
+
+shelly {
+  mqtt_address: "192.168.178.2:1883"
+}

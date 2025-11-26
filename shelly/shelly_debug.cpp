@@ -24,14 +24,12 @@ public:
                       const std::string& mqtt_addr)
         : ShellyModule(cfg, writer, cache, mqtt_addr) {}
 
-    void HandleMqttMessage(const std::string& topic, const web::json::value& payload_json) override {
-        try {
-            std::cout << "[Shelly] " << topic << ": "
-                      << utility::conversions::to_utf8string(payload_json.serialize())
-                      << std::endl;
-        } catch (const std::exception& e) {
-            LOG(ERROR) << "Error printing Shelly MQTT message: " << e.what();
-        }
+
+
+protected:
+    absl::Status Update(const ShellyData& data) override {
+        std::cout << "[Shelly] " << data.Utf8DebugString() << std::endl;
+        return absl::OkStatus();
     }
 };
 

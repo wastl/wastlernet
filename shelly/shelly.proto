@@ -6,12 +6,18 @@ message ShellyData {
 
   optional TemperatureData temperature_data = 2;
   optional MovementData movement_data = 3;
-  optional EnergyData energy_data = 4;
+  optional LightData light_data = 4;
+  optional EnergyData energy_data = 5;
 }
 
 message TemperatureData {
   optional double temperature = 1;
   optional double humidity = 2;
+}
+
+message LightData {
+  optional int32 lux = 1;
+  optional string illumination = 2;
 }
 
 message MovementData {
