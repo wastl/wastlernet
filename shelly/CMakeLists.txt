@@ -28,6 +28,8 @@ target_link_libraries(shelly_client PUBLIC
         pqxx ${PostgreSQL_LIBRARIES}
         cpprestsdk::cpprest
         ${MOSQUITTO_LIBRARY}
+        # Prometheus headers are included via base/metrics.h; link to ensure include dirs and symbols are available
+        prometheus-cpp::core prometheus-cpp::pull
 )
 ADD_DEPENDENCIES(shelly_client config)
 

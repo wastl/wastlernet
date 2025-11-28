@@ -4,7 +4,7 @@
 
 #include "metrics.h"
 
-namespace wastlernet { namespace metrics {
+namespace wastlernet::metrics {
 
 WastlernetMetrics::WastlernetMetrics()
     : registry_(std::make_shared<prometheus::Registry>()) {
@@ -106,4 +106,4 @@ WastlernetMetrics::ScopedQueryTimer::~ScopedQueryTimer() {
   if (ok_.has_value()) mx_.RecordQueryResult(service_, *ok_);
 }
 
-}} // namespace
+} // namespace
