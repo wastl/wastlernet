@@ -1,0 +1,3376 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 0,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 45
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 75
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 0,
+        "y": 0
+      },
+      "id": 18,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT speicher_oben FROM solvis ORDER BY time DESC LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "kessel",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Speicher Oben",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 45
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 75
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 3,
+        "y": 0
+      },
+      "id": 20,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT heizungspuffer_oben FROM solvis ORDER BY time DESC LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "kessel",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Heizungspuffer Oben",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 45
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 75
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 6,
+        "y": 0
+      },
+      "id": 21,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT heizungspuffer_unten FROM solvis ORDER BY time DESC LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "kessel",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Heizungspuffer Unten",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 45
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 75
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 9,
+        "y": 0
+      },
+      "id": 19,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT speicher_unten FROM solvis ORDER BY time DESC LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "kessel",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Speicher Unten",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 40
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 12,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT solar_kollektor FROM solvis ORDER BY time DESC LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "kessel",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Kollektor",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 15,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT solar_leistung FROM solvis ORDER BY time DESC LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "kessel",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Solarleistung (Aktuell)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 18,
+        "y": 0
+      },
+      "id": 9,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    TO_CHAR(time_bucket('1 day', time), 'YYYY-MM-DD') AS date,\n    integral(time_weight('linear', time, solar_leistung), 'hours')::NUMERIC(6,2) AS leistung\nFROM\n    solvis\nWHERE time >= CURRENT_DATE \nGROUP BY time_bucket('1 day', time)\nORDER BY time_bucket('1 day', time) ASC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "kessel",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Solarleistung (Tag)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "leistung"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "unit",
+                "value": "kwatt"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 20
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "kollektor"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 15,
+        "x": 0,
+        "y": 6
+      },
+      "id": 11,
+      "interval": "1s",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT time_bucket('$__interval', time) AS time, \n  AVG(solar_kollektor) AS Kollektor, \n  AVG(solar_vorlauf) AS Vorlauf, \n  AVG(solar_ruecklauf) AS Rücklauf, \n  AVG(solar_waermetauscher) AS Wärmetauscher, \n  AVG(solar_leistung) AS Leistung \nFROM solvis \nWHERE  $__timeFilter(time)\nGROUP BY time_bucket('$__interval', time) \nORDER BY \"time\"",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "\"time\"",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "speicher_oben",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "heizungspuffer_oben",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "heizungspuffer_unten",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "speicher_unten",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "name": "\"time\"",
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "orderBy": {
+              "property": {
+                "name": [
+                  "\"time\""
+                ],
+                "type": "string"
+              },
+              "type": "property"
+            }
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Solaranlage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 15,
+        "y": 6
+      },
+      "id": 13,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.8,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "date",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    TO_CHAR(time_bucket('1 day', time, 'Europe/Vienna'), 'MM-DD') AS date,\n    (integral(time_weight('linear', time, solar_leistung), 'hours'))::NUMERIC(4,2) AS leistung\nFROM\n    solvis\nWHERE time >= CURRENT_DATE - 7 \nGROUP BY time_bucket('1 day', time, 'Europe/Vienna')\nORDER BY time_bucket('1 day', time, 'Europe/Vienna') ASC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Solarleistung",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": 60000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 45
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "heizkreis"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 45
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "warmwasser"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 45
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 15,
+        "x": 0,
+        "y": 14
+      },
+      "id": 2,
+      "interval": "1s",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT time_bucket('$__interval', time) AS time, \n  AVG(speicher_oben) AS Speicher_Oben, \n  AVG(heizungspuffer_oben) AS Heizungspuffer_Oben, \n  AVG(heizungspuffer_unten) AS Heizungspuffer_Unten, \n  AVG(speicher_unten) AS Speicher_Unten,\n  AVG((speicher_oben+speicher_unten)/2) AS Durchschnitt,\n  EVERY(pumpe_heizkreis1) AS Heizkreis,\n  EVERY(durchfluss > 0) AS Warmwasser\nFROM solvis \nWHERE  $__timeFilter(time)\nGROUP BY time_bucket('$__interval', time) \nORDER BY \"time\"",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "\"time\"",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "speicher_oben",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "heizungspuffer_oben",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "heizungspuffer_unten",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "speicher_unten",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "name": "\"time\"",
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "orderBy": {
+              "property": {
+                "name": [
+                  "\"time\""
+                ],
+                "type": "string"
+              },
+              "type": "property"
+            }
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Pufferspeicher",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "leistung"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 15,
+        "y": 14
+      },
+      "id": 15,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.8,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "date",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SET max_parallel_workers_per_gather = 0;\nSELECT\n    TO_CHAR(time_bucket('1 day', time, 'Europe/Vienna'), 'MM-DD') AS date,\n    (integral(time_weight('linear', time, kessel_leistung), 'hours'))::NUMERIC(5,2) AS leistung\nFROM\n    solvis\nWHERE time >= CURRENT_DATE - 7 \nGROUP BY time_bucket('1 day', time, 'Europe/Vienna')\nORDER BY time_bucket('1 day', time, 'Europe/Vienna') ASC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Kesselleistung (geschätzt)",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": 60000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pumpe"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 25
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "brenner"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 25
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 15,
+        "x": 0,
+        "y": 22
+      },
+      "id": 14,
+      "interval": "1s",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT time_bucket('$__interval', time) AS time, \n  AVG(kessel) AS Kessel,\n  EVERY(kessel_ladepumpe) AS Pumpe,\n  EVERY(kessel_brenner) AS Brenner\nFROM solvis \nWHERE  $__timeFilter(time)\nGROUP BY time_bucket('$__interval', time) \nORDER BY \"time\"",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "\"time\"",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "speicher_oben",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "heizungspuffer_oben",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "heizungspuffer_unten",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "speicher_unten",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "name": "\"time\"",
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "orderBy": {
+              "property": {
+                "name": [
+                  "\"time\""
+                ],
+                "type": "string"
+              },
+              "type": "property"
+            }
+          },
+          "table": "solvis"
+        }
+      ],
+      "title": "Kessel",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "min"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 15,
+        "y": 22
+      },
+      "id": 17,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.95,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT TO_CHAR(time_bucket('1 day', time, 'Europe/Vienna'), 'MM-DD') AS date, MIN(outdoor_temperature) AS min, MAX(outdoor_temperature) AS max\nFROM weather \nWHERE time >= CURRENT_DATE - 7\nGROUP BY time_bucket('1 day', time, 'Europe/Vienna')\nORDER BY time_bucket('1 day', time, 'Europe/Vienna') ASC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Tagestemperaturen",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 7,
+        "x": 0,
+        "y": 30
+      },
+      "id": 24,
+      "options": {
+        "autoScale": true,
+        "bgURL": "https://wastlerlehen.dynamic-dns.net/solvis/solar_inv.jpeg",
+        "boxes": [
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#0f0",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "solar_kollektor",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "20,60",
+            "url": "",
+            "xpos": 580,
+            "ypos": 50
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#ccccdc",
+            "colorHigh": "#f00",
+            "colorLow": "#0f0",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": false,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "solar_leistung",
+            "suffix": "kW",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "",
+            "url": "",
+            "xpos": 725,
+            "ypos": 90
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "solar_ruecklauf",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "20,60",
+            "url": "",
+            "xpos": 360,
+            "ypos": 340
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "solar_vorlauf",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "20,60",
+            "url": "",
+            "xpos": 360,
+            "ypos": 260
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "solar_waermetauscher",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "20,60",
+            "url": "",
+            "xpos": 510,
+            "ypos": 260
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "speicher_oben",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 110
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "heizungspuffer_oben",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 233
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "heizungspuffer_unten",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 303
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "speicher_unten",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 360
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#FADE2A",
+            "colorHigh": "#f00",
+            "colorLow": "#0f0",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 0,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": false,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "solarradiation",
+            "suffix": "W/m²",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "",
+            "url": "",
+            "xpos": 660,
+            "ypos": 50
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#ccccdc",
+            "colorLow": "#00000000",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 0,
+            "fontSize": 12,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": true,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": true,
+            "orbLocation": "Left",
+            "orbSize": 40,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "solar_leistung",
+            "suffix": "",
+            "suffixSize": 10,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "0,1",
+            "url": "",
+            "xpos": 525,
+            "ypos": 354
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#ccccdc",
+            "colorLow": "#00000000",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 0,
+            "fontSize": 12,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": true,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": true,
+            "orbLocation": "Left",
+            "orbSize": 40,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "solar_leistung",
+            "suffix": "",
+            "suffixSize": 10,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "0,1",
+            "url": "",
+            "xpos": 311,
+            "ypos": 354
+          }
+        ]
+      },
+      "pluginVersion": "2.0.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT solar_kollektor, solar_vorlauf, solar_ruecklauf, solar_waermetauscher, solar_leistung, speicher_oben, heizungspuffer_oben, heizungspuffer_unten, speicher_unten FROM solvis ORDER BY time DESC LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT solarradiation FROM weather ORDER BY time DESC LIMIT 1",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Solar",
+      "type": "larona-epict-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 7,
+        "x": 7,
+        "y": 30
+      },
+      "id": 25,
+      "options": {
+        "autoScale": true,
+        "bgURL": "https://wastlerlehen.dynamic-dns.net/solvis/wasser_inv.jpeg",
+        "boxes": [
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "speicher_oben",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 110
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "heizungspuffer_oben",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 233
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "heizungspuffer_unten",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 303
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "speicher_unten",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 360
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "warmwasser",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 450,
+            "ypos": 230
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "kaltwasser",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 570,
+            "ypos": 330
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "zirkulation",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "30,40",
+            "url": "",
+            "xpos": 680,
+            "ypos": 230
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#0f0",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": false,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "durchfluss",
+            "suffix": "l/min",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "",
+            "url": "",
+            "xpos": 450,
+            "ypos": 330
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#ccccdc",
+            "colorLow": "#00000000",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 0,
+            "fontSize": 12,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": true,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": true,
+            "orbLocation": "Left",
+            "orbSize": 40,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "durchfluss",
+            "suffix": "",
+            "suffixSize": 10,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "0,1",
+            "url": "",
+            "xpos": 313,
+            "ypos": 275
+          }
+        ]
+      },
+      "pluginVersion": "2.0.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT warmwasser, kaltwasser, zirkulation, durchfluss, speicher_oben, heizungspuffer_oben, heizungspuffer_unten, speicher_unten FROM solvis ORDER BY time DESC LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Wasser",
+      "type": "larona-epict-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "uCCxUxY4k"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 7,
+        "x": 14,
+        "y": 30
+      },
+      "id": 26,
+      "options": {
+        "autoScale": true,
+        "bgURL": "https://wastlerlehen.dynamic-dns.net/solvis/heizung_inv.jpeg",
+        "boxes": [
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "speicher_oben",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 110
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "heizungspuffer_oben",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 233
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "heizungspuffer_unten",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 303
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "speicher_unten",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "40,60",
+            "url": "",
+            "xpos": 10,
+            "ypos": 360
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "vorlauf_heizkreis1",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "30,60",
+            "url": "",
+            "xpos": 270,
+            "ypos": 265
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "vorlauf_heizkreis2",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "30,60",
+            "url": "",
+            "xpos": 425,
+            "ypos": 265
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": false,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "kessel",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "30,60",
+            "url": "",
+            "xpos": 720,
+            "ypos": 312
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#0f0",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "kessel_leistung",
+            "suffix": "kW",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "0,10",
+            "url": "",
+            "xpos": 710,
+            "ypos": 200
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "außen:",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "outdoor_temperature",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "10,25",
+            "url": "",
+            "xpos": 640,
+            "ypos": 70
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#ccccdc",
+            "colorLow": "#00000000",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 0,
+            "fontSize": 12,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": true,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": true,
+            "orbLocation": "Left",
+            "orbSize": 40,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "pumpe_heizkreis1",
+            "suffix": "",
+            "suffixSize": 10,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "0,1",
+            "url": "",
+            "xpos": 241,
+            "ypos": 223
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#ccccdc",
+            "colorLow": "#00000000",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 0,
+            "fontSize": 12,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": true,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": true,
+            "orbLocation": "Left",
+            "orbSize": 40,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "pumpe_heizkreis2",
+            "suffix": "",
+            "suffixSize": 10,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "0,1",
+            "url": "",
+            "xpos": 390,
+            "ypos": 223
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#ccccdc",
+            "colorLow": "#00000000",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 0,
+            "fontSize": 12,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": true,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": true,
+            "orbLocation": "Left",
+            "orbSize": 40,
+            "prefix": "",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "kessel_ladepumpe",
+            "suffix": "",
+            "suffixSize": 10,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "0,1",
+            "url": "",
+            "xpos": 715,
+            "ypos": 274
+          },
+          {
+            "angle": 0,
+            "backgroundColor": "#5794F2",
+            "blinkHigh": true,
+            "blinkLow": false,
+            "borderColor": "#fff",
+            "borderWidth": 1,
+            "color": "#fff",
+            "colorHigh": "#f00",
+            "colorLow": "#5794F2",
+            "colorMedium": "#fa1",
+            "colorSymbol": false,
+            "customSymbol": "",
+            "decimal": 1,
+            "fontSize": 18,
+            "hasBackground": false,
+            "hasBorder": false,
+            "hasOrb": false,
+            "hasSymbol": false,
+            "isUsingThresholds": true,
+            "orbHideText": false,
+            "orbLocation": "Left",
+            "orbSize": 10,
+            "prefix": "innen:",
+            "prefixSize": 10,
+            "selected": false,
+            "serie": "indoor_temperature",
+            "suffix": "°C",
+            "suffixSize": 18,
+            "symbol": "",
+            "symbolDefHeight": 32,
+            "symbolDefWidth": 32,
+            "symbolHeight": 32,
+            "symbolHideText": false,
+            "symbolWidth": 32,
+            "text": "N/A",
+            "thresholds": "10,25",
+            "url": "",
+            "xpos": 640,
+            "ypos": 90
+          }
+        ]
+      },
+      "pluginVersion": "2.0.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT vorlauf_heizkreis1, vorlauf_heizkreis2, pumpe_heizkreis1, pumpe_heizkreis2, kessel, kessel_leistung, kessel_ladepumpe, kessel_brenner, speicher_oben, heizungspuffer_oben, heizungspuffer_unten, speicher_unten FROM solvis ORDER BY time DESC LIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "uCCxUxY4k"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT outdoor_temperature, indoor_temperature FROM weather ORDER BY time DESC LIMIT 1",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Heizung",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "pumpe_heizkreis1"
+              },
+              {
+                "destinationType": "number",
+                "targetField": "pumpe_heizkreis2"
+              },
+              {
+                "destinationType": "number",
+                "targetField": "kessel_ladepumpe"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "larona-epict-panel"
+    }
+  ],
+  "preload": false,
+  "refresh": "5s",
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Heizung",
+  "uid": "IE-CUxLVk",
+  "version": 68
+}
