@@ -19,6 +19,11 @@ WastlernetMetrics::WastlernetMetrics()
       .Help("Query latency for different services in seconds.")
       .Register(*registry_);
 
+  device_updates_total_family_ = &prometheus::BuildCounter()
+      .Name("wastlernet_device_updates_total")
+      .Help("Number of updates received from devices, labeled by service and device.")
+      .Register(*registry_);
+
   // Increment app starts gauge/counter
   prometheus::BuildCounter()
       .Name("wastlernet_app_starts_total")
@@ -75,6 +80,23 @@ void WastlernetMetrics::RecordQueryResult(const std::string& service, bool ok) {
 void WastlernetMetrics::ObserveQueryLatency(const std::string& service, double seconds) {
   auto& c = GetOrCreateChildren(service);
   c.latency->Observe(seconds);
+}
+
+void WastlernetMetrics::RecordDeviceUpdate(const std::string& service, const std::string& device) {
+  absl::MutexLock lock(&mu_);
+  // Key as service|device to cache counters
+  std::string key = service;
+  key.push_back('|');
+  key.append(device);
+  auto it = device_updates_counters_.find(key);
+  prometheus::Counter* ctr = nullptr;
+  if (it != device_updates_counters_.end()) {
+    ctr = it->second;
+  } else {
+    ctr = &device_updates_total_family_->Add({{"service", service}, {"device", device}});
+    device_updates_counters_.emplace(key, ctr);
+  }
+  ctr->Increment();
 }
 
 WastlernetMetrics::ScopedQueryTimer::~ScopedQueryTimer() {

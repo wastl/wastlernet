@@ -46,6 +46,10 @@ public:
     // Observe a query latency in seconds (histogram)
     void ObserveQueryLatency(const std::string& service, double seconds);
 
+    // Record that we received an update from a specific device under a service
+    // Exposes Prometheus counter: wastlernet_device_updates_total{service="...", device="..."}
+    void RecordDeviceUpdate(const std::string& service, const std::string& device);
+
     // RAII helper to time a scope and optionally record result on destruction
     class ScopedQueryTimer {
     public:
@@ -95,6 +99,10 @@ private:
 
     prometheus::Family<prometheus::Counter>* queries_total_family_; // labels: service, result
     prometheus::Family<prometheus::Histogram>* query_latency_seconds_family_; // label: service
+    prometheus::Family<prometheus::Counter>* device_updates_total_family_; // labels: service, device
+
+    // Cache for device counters to avoid duplicate Add() calls with same labels
+    std::unordered_map<std::string, prometheus::Counter*> device_updates_counters_ ABSL_GUARDED_BY(mu_);
 };
 }
 

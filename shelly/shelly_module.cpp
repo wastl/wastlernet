@@ -9,6 +9,8 @@
 #include <absl/strings/str_cat.h>
 #include <vector>
 
+#include "base/metrics.h"
+
 using web::json::value;
 using utility::conversions::to_string_t;
 
@@ -40,6 +42,8 @@ namespace wastlernet::shelly {
     void ShellyModule::OnConnect(mosquitto* m, void* /*obj*/, int rc) {
         if (rc != 0) {
             LOG(ERROR) << "Shelly MQTT connect failed with code " << rc;
+            // Prometheus: record failed MQTT connection attempt
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("shelly_mqtt", false);
             return;
         }
         LOG(INFO) << "Shelly MQTT connected. Subscribing to topics 'shelly/#'";
@@ -47,6 +51,9 @@ namespace wastlernet::shelly {
         int res = mosquitto_subscribe(m, &mid, "shelly/#", 0);
         if (res != MOSQ_ERR_SUCCESS) {
             LOG(ERROR) << "Shelly MQTT subscribe failed: " << mosquitto_strerror(res);
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("shelly_mqtt", false);
+        } else {
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("shelly_mqtt", true);
         }
     }
 
@@ -55,6 +62,7 @@ namespace wastlernet::shelly {
         if (!self)
             return;
         try {
+            auto start_time = std::chrono::high_resolution_clock::now();
             std::string topic = msg && msg->topic ? msg->topic : "";
             std::string payload;
             if (msg && msg->payload && msg->payloadlen > 0) {
@@ -66,8 +74,16 @@ namespace wastlernet::shelly {
             if (!st.ok()) {
                 LOG(ERROR) << "Shelly MQTT message handling failed: " << st.message();
             }
+            // Note: success/failure counters for DB updates are recorded inside HandleMqttMessage
+            // when an actual update is performed. Here we could observe end-to-end latency if needed.
+            auto end_time = std::chrono::high_resolution_clock::now();
+            const double seconds = std::chrono::duration<double>(end_time - start_time).count();
+            // Optional: observe total message handling latency under a separate service label
+            wastlernet::metrics::WastlernetMetrics::GetInstance().ObserveQueryLatency("shelly_message", seconds);
         } catch (const std::exception& e) {
             LOG(ERROR) << "Shelly MQTT message handling error: " << e.what();
+            // Count as a failed Shelly update attempt
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("shelly", false);
         }
     }
 
@@ -98,6 +114,7 @@ namespace wastlernet::shelly {
         if (rc != MOSQ_ERR_SUCCESS) {
             LOG(ERROR) << "Shelly MQTT connection failed to " << host_ << ":" << port_
                 << " - " << mosquitto_strerror(rc);
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("shelly_mqtt", false);
             mosquitto_destroy(mqtt_);
             mqtt_ = nullptr;
             running_ = false;
@@ -109,6 +126,7 @@ namespace wastlernet::shelly {
         rc = mosquitto_loop_start(mqtt_);
         if (rc != MOSQ_ERR_SUCCESS) {
             LOG(ERROR) << "Shelly MQTT loop_start failed: " << mosquitto_strerror(rc);
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("shelly_mqtt", false);
             mosquitto_disconnect(mqtt_);
             mosquitto_destroy(mqtt_);
             mqtt_ = nullptr;
@@ -116,6 +134,8 @@ namespace wastlernet::shelly {
             mosquitto_lib_cleanup();
             return;
         }
+        // Successful startup path
+        wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("shelly_mqtt", true);
         LOG(INFO) << "Shelly MQTT client started, connecting to " << host_ << ":" << port_;
     }
 
@@ -203,12 +223,24 @@ namespace wastlernet::shelly {
                 }
             }
 
-            if (has_data)
-                return Update(data);
+            if (has_data) {
+                // Record per-device update occurrence for Prometheus
+                wastlernet::metrics::WastlernetMetrics::GetInstance().RecordDeviceUpdate(
+                    "shelly", data.device_name());
+                // Measure DB update latency and record success/failure like other modules
+                auto start_time = std::chrono::high_resolution_clock::now();
+                auto st = Update(data);
+                auto end_time = std::chrono::high_resolution_clock::now();
+                const double seconds = std::chrono::duration<double>(end_time - start_time).count();
+                wastlernet::metrics::WastlernetMetrics::GetInstance().ObserveQueryLatency("shelly", seconds);
+                wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("shelly", st.ok());
+                return st;
+            }
 
             return absl::OkStatus();
         } catch (const std::exception& e) {
             LOG(ERROR) << "Error logging Shelly MQTT message: " << e.what();
+            wastlernet::metrics::WastlernetMetrics::GetInstance().RecordQueryResult("shelly", false);
             return absl::InternalError(e.what());
         }
     }
