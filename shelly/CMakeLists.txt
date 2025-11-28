@@ -15,7 +15,9 @@ add_compile_definitions(-DGLOG_USE_GLOG_EXPORT)
 ADD_LIBRARY(shelly_client
         ${PROTO_HEADER} ${PROTO_SRC}
         shelly_module.cpp shelly_module.h
-        shelly_timescaledb.cpp shelly_timescaledb.h)
+        shelly_timescaledb.cpp shelly_timescaledb.h
+        # Ensure Prometheus metrics symbols are available to dependents
+        ${CMAKE_SOURCE_DIR}/base/metrics.h ${CMAKE_SOURCE_DIR}/base/metrics.cpp)
 ## Find and link libmosquitto (MQTT)
 find_library(MOSQUITTO_LIBRARY NAMES mosquitto)
 if (NOT MOSQUITTO_LIBRARY)
@@ -42,4 +44,6 @@ target_link_libraries(shelly_debug PRIVATE
         cpprestsdk::cpprest
         ${Protobuf_LIBRARIES}
         absl::strings absl::status absl::statusor absl::str_format_internal absl::throw_delegate absl::hash absl::city absl::raw_hash_set absl::synchronization
+        Threads::Threads
+        OpenSSL::Crypto
 )
