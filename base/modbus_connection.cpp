@@ -47,12 +47,11 @@ absl::Status wastlernet::ModbusConnection::Init() {
 }
 
 absl::Status wastlernet::ModbusConnection::Execute(const std::function<absl::Status(modbus_t *)>& method) {
+    auto st = Reinit();
+
     if (!initialized_) {
         return absl::FailedPreconditionError("Modbus connection not initialized");
     }
-
-
-    auto st = Reinit();
 
     absl::MutexLock lock(&mutex_);
     if (!st.ok()) {
