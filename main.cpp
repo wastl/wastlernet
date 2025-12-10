@@ -146,8 +146,7 @@ int main(int argc, char* argv[]) {
         solvis_connection = std::make_unique<solvis::SolvisModbusConnection>(config.solvis());
         auto solvis_st = solvis_connection->Init();
         if (!solvis_st.ok()) {
-            LOG(ERROR) << "Could not initialize Solvis connection: " << solvis_st;
-            return 1;
+            LOG(WARNING) << "Could not initialize Solvis Modbus connection: " << solvis_st << "; retrying later.";
         }
 
         auto solvis_client = std::make_unique<solvis::SolvisModule>(config.timescaledb(), config.solvis(),

@@ -4,6 +4,7 @@
 #include "utility.h"
 
 #include <thread>
+#include <chrono>
 
 namespace wastlernet {
     absl::Status retry_with_backoff(const std::function<absl::Status()>& method, int times) {
@@ -13,7 +14,9 @@ namespace wastlernet {
             if (st.ok()) {
                 return st;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100*(retries+1)));
+            // Exponential backoff: 100ms * 2^retries
+            const auto delay_ms = 100 * (1 << retries);
+            std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
         }
         return st;
     }

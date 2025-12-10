@@ -34,7 +34,7 @@ absl::Status wastlernet::ModbusConnection::Init() {
             return absl::InternalError(absl::StrCat("Connection failed: ", modbus_strerror(errno)));
         }
         return absl::OkStatus();
-    }, 3);
+    }, 5);
 
     if (st.ok()) {
         initialized_ = true;
