@@ -51,9 +51,10 @@ namespace wastlernet {
          * @param port        TCP port.
          * @param init_addr   Optional starting address for an initial read during Init() (-1 to skip).
          * @param init_count  Number of registers to read for the initial check.
+         * @param timeout_ms  Timeout for modbus connection in milliseconds
          */
-        ModbusConnection(const std::string& host, int16_t port, int32_t init_addr = -1, int16_t init_count = 2)
-        : host_(host), port_(port), init_addr_(init_addr), init_count_(init_count) { }
+        ModbusConnection(const std::string& host, int16_t port, int32_t init_addr = -1, int16_t init_count = 2, int32_t timeout_ms = 5000)
+        : host_(host), port_(port), init_addr_(init_addr), init_count_(init_count), timeout_ms_(timeout_ms) { }
 
         virtual ~ModbusConnection();
 
@@ -80,6 +81,7 @@ namespace wastlernet {
         int16_t port_;
         int32_t init_addr_;
         int16_t init_count_;
+        int32_t timeout_ms_;
 
         bool initialized_ = false;
 

@@ -28,6 +28,9 @@ absl::Status wastlernet::ModbusConnection::Init() {
         return absl::InternalError("Unable to allocate libmodbus context");
     }
 
+    // set response timeout
+    modbus_set_response_timeout(ctx_, timeout_ms_ / 1000, (timeout_ms_ % 1000) * 1000);
+
     auto st = wastlernet::retry_with_backoff([this]() {
         int rc = modbus_connect(ctx_);
         if (rc == -1) {
