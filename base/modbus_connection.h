@@ -53,7 +53,7 @@ namespace wastlernet {
          * @param init_count  Number of registers to read for the initial check.
          * @param timeout_ms  Timeout for modbus connection in milliseconds
          */
-        ModbusConnection(const std::string& host, int16_t port, int32_t init_addr = -1, int16_t init_count = 2, int32_t timeout_ms = 5000)
+        ModbusConnection(const std::string& host, int16_t port, int32_t init_addr = -1, int16_t init_count = 2, int32_t timeout_ms = 10000)
         : host_(host), port_(port), init_addr_(init_addr), init_count_(init_count), timeout_ms_(timeout_ms) { }
 
         virtual ~ModbusConnection();
@@ -85,7 +85,7 @@ namespace wastlernet {
 
         bool initialized_ = false;
 
-        modbus_t *ctx_;
+        modbus_t *ctx_ = nullptr;
 
         /** Check if a reinit is necessary and re-establish the connection if needed. */
         absl::Status Reinit();
